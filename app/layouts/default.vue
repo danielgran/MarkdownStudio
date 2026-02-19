@@ -9,7 +9,10 @@ const navigation = [
   <div>
     <UHeader>
       <template #left>
-        <NuxtLink to="/" class="flex items-center gap-2">
+        <NuxtLink
+          to="/"
+          class="flex items-center gap-2"
+        >
           <AppLogo />
         </NuxtLink>
       </template>
@@ -35,7 +38,10 @@ const navigation = [
       </template>
 
       <template #right>
-        <NuxtLink to="/imprint" class="text-sm text-muted hover:text-highlighted">
+        <NuxtLink
+          to="/imprint"
+          class="text-sm text-muted hover:text-highlighted"
+        >
           Imprint
         </NuxtLink>
       </template>
