@@ -8,7 +8,9 @@
         <span
           class="drag-handle"
           title="Drag to reorder"
-        >⠿</span>
+        >
+          ⠿
+        </span>
         <button
           type="button"
           tabindex="-1"
