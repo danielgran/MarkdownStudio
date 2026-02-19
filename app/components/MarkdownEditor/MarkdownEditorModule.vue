@@ -1,9 +1,9 @@
 <template>
   <div
     ref="markdownEditorModuleRef"
-    class="hbts-markdown-editor-module"
+    class="markdown-editor-module"
   >
-    <div class="hbts-markdown-editor-module-controls">
+    <div class="markdown-editor-module-controls">
       <template v-if="focused || mouseOver">
         <button
           type="button"
@@ -23,9 +23,9 @@
     </div>
     <div
       ref="contentRef"
-      class="hbts-markdown-editor-module-content"
+      class="markdown-editor-module-content"
       :class="{
-        'hbts-markdown-editor-module-content-focused': props.focused,
+        'markdown-editor-module-content-focused': props.focused,
       }"
     >
       <component
@@ -102,7 +102,7 @@ watch(innerElementFocus.focused, (isFocused) => {
 </script>
 
 <style lang="scss" scoped>
-.hbts-markdown-editor-module {
+.markdown-editor-module {
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -111,12 +111,12 @@ watch(innerElementFocus.focused, (isFocused) => {
     outline: none;
   }
 
-  .hbts-markdown-editor-module-content {
+  .markdown-editor-module-content {
     width: 100%;
     outline: none;
   }
 
-  .hbts-markdown-editor-module-controls {
+  .markdown-editor-module-controls {
     width: 6rem;
     display: flex;
     flex-direction: row;
@@ -124,7 +124,7 @@ watch(innerElementFocus.focused, (isFocused) => {
     align-items: center;
   }
 
-  .hbts-markdown-editor-module-content-focused {
+  .markdown-editor-module-content-focused {
     background-color: rgba(158, 149, 149, 0.05);
   }
 }

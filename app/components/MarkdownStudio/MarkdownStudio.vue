@@ -1,14 +1,16 @@
 <template>
   <div class="flex-1 flex flex-col">
     <MarkdownStudioToolbar />
-    <div class="flex-1 flex">
+    <div class="flex-1 flex gap-4">
       <div class="flex-1 flex justify-center py-12 px-4">
         <MarkdownEditor
           v-model="content"
           class="w-full max-w-3xl border border-default rounded-lg shadow-sm"
         />
       </div>
-      <MarkdownStudioSidebar class="w-64 border-l border-default" />
+      <div class="py-6 pr-6">
+        <MarkdownStudioSidebar />
+      </div>
     </div>
   </div>
 </template>

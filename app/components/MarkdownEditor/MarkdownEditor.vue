@@ -2,6 +2,7 @@
   <div
     class="markdown-editor"
     @click="handleClickBlankArea"
+    @mouseup="handleMouseUp"
   >
     <MarkdownEditorModule
       v-for="(node, index) in markdownNodes"
@@ -16,6 +17,16 @@
       @update:cursor-position="(pos) => handleUpdateCursorPosition(node, pos)"
       @change-type="handleChangeType"
     />
+    
+    <MarkdownEditorTextSelectionContextMenu
+      v-if="showContextMenu"
+      :x="contextMenuPosition.x"
+      :y="contextMenuPosition.y"
+      :is-active="contextMenuActiveStates"
+      @toggle-bold="toggleBold"
+      @toggle-italic="toggleItalic"
+      @toggle-underline="toggleUnderline"
+    />
   </div>
 </template>
 
@@ -24,12 +35,23 @@ import { nextTick, ref } from "vue";
 import useMarkdownProcessor from "./Composable/useMarkdownProcessor";
 import { isTextNodeState as isTextishNode } from "./MarkdownComponentRegistry";
 import MarkdownEditorModule from "./MarkdownEditorModule.vue";
+import MarkdownEditorTextSelectionContextMenu from "./ContextMenu/MarkdownEditorTextSelectionContextMenu.vue";
 import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 import type MarkdownNodeType from "./Types/MarkdownAstNodeType";
 
 const modelValue = defineModel<string>();
 const { markdownNodes, deleteNode, addBlankNode, replaceNodeType } = useMarkdownProcessor(modelValue);
 const focusedNode = ref<MarkdownAstNode | null>(null);
+
+// Context menu state
+const showContextMenu = ref(false);
+const contextMenuPosition = ref({ x: 0, y: 0 });
+const contextMenuActiveStates = ref({
+  bold: false,
+  italic: false,
+  underline: false,
+});
+let selectionDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 function handleUpdateCursorPosition(node: MarkdownAstNode, position: number) {
   node.editingState.cursorPosition = position;
@@ -145,6 +167,71 @@ function moveFocusOneDown() {
       focusedNode.value = getNodeByIndex(index + 1);
     }
   });
+}
+
+// Context menu handlers
+function handleMouseUp() {
+  // Clear existing timer
+  if (selectionDebounceTimer) {
+    clearTimeout(selectionDebounceTimer);
+  }
+
+  const selection = window.getSelection();
+  
+  if (!selection || selection.isCollapsed || selection.toString().trim() === "") {
+    showContextMenu.value = false;
+    return;
+  }
+
+  // Debounce: wait 500ms before showing context menu
+  selectionDebounceTimer = setTimeout(() => {
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    
+    // Position the context menu above the selection
+    contextMenuPosition.value = {
+      x: rect.left + rect.width / 2 - 75, // Center and offset
+      y: rect.top - 50, // Position above selection
+    };
+
+    // Detect active formatting states
+    const parentElement = range.commonAncestorContainer.parentElement;
+    if (parentElement) {
+      contextMenuActiveStates.value = {
+        bold: isElementOrParentTagName(parentElement, ['STRONG', 'B']),
+        italic: isElementOrParentTagName(parentElement, ['EM', 'I']),
+        underline: isElementOrParentTagName(parentElement, ['U']),
+      };
+    }
+
+    showContextMenu.value = true;
+  }, 500);
+}
+
+function isElementOrParentTagName(element: HTMLElement, tagNames: string[]): boolean {
+  let current: HTMLElement | null = element;
+  while (current) {
+    if (tagNames.includes(current.tagName)) {
+      return true;
+    }
+    current = current.parentElement;
+  }
+  return false;
+}
+
+function toggleBold() {
+  document.execCommand('bold');
+  showContextMenu.value = false;
+}
+
+function toggleItalic() {
+  document.execCommand('italic');
+  showContextMenu.value = false;
+}
+
+function toggleUnderline() {
+  document.execCommand('underline');
+  showContextMenu.value = false;
 }
 </script>
 

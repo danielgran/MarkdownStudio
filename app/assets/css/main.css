@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import "./typography.scss";
 
 @theme static {
-  --font-sans: 'Inter', 'Public Sans', sans-serif;
+  --font-sans: 'Space Grotesk', 'Inter', 'Public Sans', sans-serif;
 }
