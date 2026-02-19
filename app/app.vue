@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useHead, useSeoMeta } from '#imports'
 useHead({
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }

@@ -9,6 +9,10 @@ export default defineNuxtConfig({
     enabled: true
   },
 
+  imports: {
+    autoImport: false
+  },
+
   css: ['~/assets/css/main.css'],
 
   routeRules: {
@@ -17,6 +21,10 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-01-15',
+
+  typescript: {
+    strict: true
+  },
 
   eslint: {
     config: {

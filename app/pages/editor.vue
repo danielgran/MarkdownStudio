@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { definePageMeta } from '#imports'
 definePageMeta({
   layout: 'editor'
 })
@@ -6,7 +7,6 @@ definePageMeta({
 
 <template>
   <div class="flex flex-col min-h-screen">
-    <EditorToolbar />
-    <EditorContent />
+    <MarkdownStudio />
   </div>
 </template>
