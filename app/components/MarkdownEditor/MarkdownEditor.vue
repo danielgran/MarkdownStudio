@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="editorContainerRef"
     class="markdown-editor"
     @click="handleClickBlankArea"
     @mouseup="handleMouseUp"
@@ -17,7 +18,7 @@
       @update:cursor-position="(pos) => handleUpdateCursorPosition(node, pos)"
       @change-type="handleChangeType"
     />
-    
+
     <MarkdownEditorTextSelectionContextMenu
       v-if="showContextMenu"
       :x="contextMenuPosition.x"
@@ -31,16 +32,26 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, ref } from "vue";
+import { useSortable } from "@vueuse/integrations/useSortable";
+import { nextTick, ref, useTemplateRef } from "vue";
 import useMarkdownProcessor from "./Composable/useMarkdownProcessor";
+import MarkdownEditorTextSelectionContextMenu from "./ContextMenu/MarkdownEditorTextSelectionContextMenu.vue";
 import { isTextNodeState as isTextishNode } from "./MarkdownComponentRegistry";
 import MarkdownEditorModule from "./MarkdownEditorModule.vue";
-import MarkdownEditorTextSelectionContextMenu from "./ContextMenu/MarkdownEditorTextSelectionContextMenu.vue";
 import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 import type MarkdownNodeType from "./Types/MarkdownAstNodeType";
 
 const modelValue = defineModel<string>();
-const { markdownNodes, deleteNode, addBlankNode, replaceNodeType } = useMarkdownProcessor(modelValue);
+const { markdownNodes, deleteNode, addBlankNode, replaceNodeType, moveNode } = useMarkdownProcessor(modelValue);
+
+const editorContainerRef = useTemplateRef("editorContainerRef");
+useSortable(editorContainerRef, markdownNodes, {
+  handle: ".drag-handle",
+  animation: 150,
+  onUpdate: (e) => {
+    moveNode(e.oldIndex!, e.newIndex!);
+  },
+});
 const focusedNode = ref<MarkdownAstNode | null>(null);
 
 // Context menu state
@@ -115,14 +126,14 @@ function handleDelete(index: number) {
 }
 
 function handleClickBlankArea() {
-  const lastNode = getNodeByIndex(markdownNodes.value.length - 1);
-
-  if (isTextishNode(lastNode) && lastNode.componentState.text === "") {
+  console.log("Clicked blank area");
+  const lastNode = markdownNodes.value[markdownNodes.value.length - 1];
+  if (lastNode && isTextishNode(lastNode) && lastNode.componentState.text === "") {
     focusedNode.value = lastNode;
     return;
   }
 
-  const newIndex = markdownNodes.value.length > 0 ? markdownNodes.value.length - 1 : 0;
+  const newIndex = markdownNodes.value.length;
 
   addBlankNode(newIndex);
   focusNodeByIndex(newIndex);
@@ -177,7 +188,7 @@ function handleMouseUp() {
   }
 
   const selection = window.getSelection();
-  
+
   if (!selection || selection.isCollapsed || selection.toString().trim() === "") {
     showContextMenu.value = false;
     return;
@@ -187,7 +198,7 @@ function handleMouseUp() {
   selectionDebounceTimer = setTimeout(() => {
     const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
-    
+
     // Position the context menu above the selection
     contextMenuPosition.value = {
       x: rect.left + rect.width / 2 - 75, // Center and offset
@@ -198,9 +209,9 @@ function handleMouseUp() {
     const parentElement = range.commonAncestorContainer.parentElement;
     if (parentElement) {
       contextMenuActiveStates.value = {
-        bold: isElementOrParentTagName(parentElement, ['STRONG', 'B']),
-        italic: isElementOrParentTagName(parentElement, ['EM', 'I']),
-        underline: isElementOrParentTagName(parentElement, ['U']),
+        bold: isElementOrParentTagName(parentElement, ["STRONG", "B"]),
+        italic: isElementOrParentTagName(parentElement, ["EM", "I"]),
+        underline: isElementOrParentTagName(parentElement, ["U"]),
       };
     }
 
@@ -220,17 +231,17 @@ function isElementOrParentTagName(element: HTMLElement, tagNames: string[]): boo
 }
 
 function toggleBold() {
-  document.execCommand('bold');
+  document.execCommand("bold");
   showContextMenu.value = false;
 }
 
 function toggleItalic() {
-  document.execCommand('italic');
+  document.execCommand("italic");
   showContextMenu.value = false;
 }
 
 function toggleUnderline() {
-  document.execCommand('underline');
+  document.execCommand("underline");
   showContextMenu.value = false;
 }
 </script>
@@ -274,8 +285,9 @@ h3 {
   font-size: 1.17em;
   margin: 0;
 }
-
 </style>
 
 <style lang="scss" scoped>
+.markdown-editor {
+}
 </style>

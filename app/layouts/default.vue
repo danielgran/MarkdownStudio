@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const navigation = [
-  { label: 'Home', to: '/' },
-  { label: 'Editor', to: '/editor' }
-]
+  { label: "Home", to: "/" },
+  { label: "Editor", to: "/editor" },
+];
 </script>
 
 <template>
@@ -20,10 +20,6 @@ const navigation = [
       <template #default>
         <UNavigationMenu :items="navigation" />
       </template>
-
-      <template #right>
-        <UColorModeButton />
-      </template>
     </UHeader>
 
     <UMain>
@@ -32,9 +28,7 @@ const navigation = [
 
     <UFooter>
       <template #left>
-        <p class="text-sm text-muted">
-          © {{ new Date().getFullYear() }} MarkdownStudio
-        </p>
+        <p class="text-sm text-muted">© {{ new Date().getFullYear() }} MarkdownStudio</p>
       </template>
 
       <template #right>

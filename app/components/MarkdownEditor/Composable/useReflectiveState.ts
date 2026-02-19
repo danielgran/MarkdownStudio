@@ -26,6 +26,8 @@ function useReflectiveState<T extends MarkdownModuleTextState>(options: {
 }) {
   const editorContent = ref(markdownToHtml(options.modelRef.value.text));
 
+  console.log("Initialized editor content:", editorContent.value);
+
   function emit(html: string) {
     const markdown = htmlToMarkdown(html);
     options.modelRef.value.text = markdown;
@@ -35,7 +37,7 @@ function useReflectiveState<T extends MarkdownModuleTextState>(options: {
 
   function detectInlineTypeChange(markdown: string) {
     const detectedType = detectHeadlineTypeFromContent(markdown);
-    if (!detectedType ) return;
+    if (!detectedType) return;
 
     console.log(`Detected type change to ${detectedType}`);
     options.emit("change-type", detectedType);

@@ -1,24 +1,27 @@
 <template>
-  <MarkdownEditorContextMenu :x="x" :y="y">
-    <MarkdownEditorContextMenuInlineItem 
+  <MarkdownEditorContextMenu
+    :x="x"
+    :y="y"
+  >
+    <MarkdownEditorContextMenuInlineItem
       :active="isActive.bold"
       @click="emit('toggle-bold')"
     >
       <strong>B</strong>
     </MarkdownEditorContextMenuInlineItem>
-    
-    <MarkdownEditorContextMenuInlineItem 
+
+    <MarkdownEditorContextMenuInlineItem
       :active="isActive.italic"
       @click="emit('toggle-italic')"
     >
       <em>I</em>
     </MarkdownEditorContextMenuInlineItem>
-    
-    <MarkdownEditorContextMenuInlineItem 
+
+    <MarkdownEditorContextMenuInlineItem
       :active="isActive.underline"
       @click="emit('toggle-underline')"
     >
-      <span style="text-decoration: underline;">U</span>
+      <span style="text-decoration: underline">U</span>
     </MarkdownEditorContextMenuInlineItem>
   </MarkdownEditorContextMenu>
 </template>
@@ -35,8 +38,8 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  'toggle-bold': [];
-  'toggle-italic': [];
-  'toggle-underline': [];
+  "toggle-bold": [];
+  "toggle-italic": [];
+  "toggle-underline": [];
 }>();
 </script>

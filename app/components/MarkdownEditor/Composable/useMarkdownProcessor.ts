@@ -35,10 +35,13 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
     const processor = unified().use(remarkParse);
     const tree = processor.parse(markdown);
 
+    console.log("Parsed markdown AST:", tree);
+
     for (const node of tree.children) {
       if (node.type === "paragraph" && node.children[0]?.type === "text") {
         const text = node.children[0].value ?? "";
 
+        // Custom Component Syntax here
         // eslint-disable-next-line @stylistic/quotes
         if (text.startsWith('"""') && text.endsWith('"""')) {
           const moduleName = text.split("\n")[0].slice(3).trim();
@@ -58,26 +61,24 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
           }
         }
 
-        markdownNodes.value.push(
-          MarkdownNodeFactory.createTextNode(MarkdownNodeType.PARAGRAPH, node.children[0].value ?? ""),
-        );
+        // Regular text node
+
+        const phrasingContent = phrasingContentToText(node.children);
+
+        console.log("Phrasing content text:", phrasingContent);
+
+        markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.PARAGRAPH, phrasingContent));
       } else if (node.type === "heading" && node.depth === 1) {
-        const phrasingContent = phrasingContentToText(node.children as PhrasingContent[]);
+        const phrasingContent = phrasingContentToText(node.children);
 
         markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE1, phrasingContent));
       } else if (node.type === "heading" && node.depth === 2) {
         markdownNodes.value.push(
-          MarkdownNodeFactory.createTextNode(
-            MarkdownNodeType.HEADLINE2,
-            node.children[0]?.type === "text" ? node.children[0].value : "",
-          ),
+          MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE2, phrasingContentToText(node.children)),
         );
       } else if (node.type === "heading" && node.depth === 3) {
         markdownNodes.value.push(
-          MarkdownNodeFactory.createTextNode(
-            MarkdownNodeType.HEADLINE3,
-            node.children[0]?.type === "text" ? node.children[0].value : "",
-          ),
+          MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE3, phrasingContentToText(node.children)),
         );
       }
     }
@@ -127,10 +128,10 @@ caption: ${node.componentState.caption}
     if (isTextNodeType(newType)) {
       return MarkdownNodeFactory.createTextNode(
         newType as
-          | MarkdownNodeType.PARAGRAPH
-          | MarkdownNodeType.HEADLINE1
-          | MarkdownNodeType.HEADLINE2
-          | MarkdownNodeType.HEADLINE3,
+        | MarkdownNodeType.PARAGRAPH
+        | MarkdownNodeType.HEADLINE1
+        | MarkdownNodeType.HEADLINE2
+        | MarkdownNodeType.HEADLINE3,
         text,
       );
     } else if (newType === MarkdownNodeType.IMAGE) {
@@ -155,11 +156,17 @@ caption: ${node.componentState.caption}
     return { newNode, index: nodeIndex };
   }
 
+  function moveNode(fromIndex: number, toIndex: number) {
+    const [node] = markdownNodes.value.splice(fromIndex, 1);
+    if (node) markdownNodes.value.splice(toIndex, 0, node);
+  }
+
   return {
     markdownNodes,
     deleteNode,
     addBlankNode,
     replaceNodeType,
+    moveNode,
   };
 }
 

@@ -9,14 +9,14 @@
       :alt="modelValue.alt"
     />
     <span v-if="modelValue.alt">{{ modelValue.caption }}</span>
-    
+
     <MarkdownEditorImageContextMenu
       v-if="showContextMenu"
       :x="contextMenuPosition.x"
       :y="contextMenuPosition.y"
       @edit-attributes="openAttributesModal"
     />
-    
+
     <MarkdownEditorModal
       :show="showModal"
       title="Edit Image Attributes"
@@ -33,7 +33,7 @@
             placeholder="https://example.com/image.jpg"
           />
         </div>
-        
+
         <div class="markdown-module-image-form-field">
           <label for="image-alt">Alt Text</label>
           <input
@@ -43,7 +43,7 @@
             placeholder="Description of the image"
           />
         </div>
-        
+
         <div class="markdown-module-image-form-field">
           <label for="image-caption">Caption</label>
           <input
@@ -125,7 +125,7 @@ defineExpose({ focus });
 .markdown-module-image {
   cursor: pointer;
   position: relative;
-  
+
   img {
     max-width: 100%;
     height: auto;
@@ -149,17 +149,13 @@ defineExpose({ focus });
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  
+
   label {
     font-size: 0.875rem;
     font-weight: 500;
     color: #374151;
-    
-    @media (prefers-color-scheme: dark) {
-      color: #d1d5db;
-    }
   }
-  
+
   input {
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
@@ -168,30 +164,15 @@ defineExpose({ focus });
     background: #ffffff;
     color: #111827;
     transition: all 0.15s ease;
-    
+
     &:focus {
       outline: none;
       border-color: #3b82f6;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
-    
+
     &::placeholder {
       color: #9ca3af;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-      background: #374151;
-      border-color: #4b5563;
-      color: #f9fafb;
-      
-      &:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-      }
-      
-      &::placeholder {
-        color: #6b7280;
-      }
     }
   }
 }

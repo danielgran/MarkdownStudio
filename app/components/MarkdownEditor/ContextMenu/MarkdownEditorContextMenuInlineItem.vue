@@ -35,31 +35,18 @@ defineEmits<{
   transition: all 0.15s ease;
   min-width: 2rem;
   min-height: 2rem;
-  
+
   &:hover {
     background: #f3f4f6;
   }
-  
+
   &.is-active {
     background: #dbeafe;
     color: #1e40af;
   }
-  
+
   &:active {
     transform: scale(0.95);
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    color: #d1d5db;
-    
-    &:hover {
-      background: #374151;
-    }
-    
-    &.is-active {
-      background: #1e3a8a;
-      color: #93c5fd;
-    }
   }
 }
 </style>

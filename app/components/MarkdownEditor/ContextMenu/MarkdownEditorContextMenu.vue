@@ -1,15 +1,15 @@
 <template>
-  <div 
+  <div
     ref="contextMenuRef"
     class="markdown-editor-context-menu"
     :style="positionStyle"
   >
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
 const props = defineProps<{
   x: number;
@@ -31,15 +31,11 @@ const positionStyle = computed(() => ({
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   padding: 0.25rem;
   display: flex;
   gap: 0.25rem;
-  
-  @media (prefers-color-scheme: dark) {
-    background: #1f2937;
-    border-color: #374151;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  }
 }
 </style>

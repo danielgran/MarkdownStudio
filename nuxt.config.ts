@@ -1,37 +1,40 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/eslint',
-    '@nuxt/ui'
+    "@nuxt/eslint",
+    "@nuxt/ui",
   ],
 
-  devtools: {
-    enabled: true
-  },
-
   imports: {
-    autoImport: false
+    autoImport: false,
   },
 
-  css: ['~/assets/css/main.css'],
+  devtools: {
+    enabled: true,
+  },
+
+  css: ["~/assets/css/main.css"],
 
   routeRules: {
-    '/': { prerender: true },
-    '/imprint': { prerender: true }
+    "/": { prerender: true },
+    "/imprint": { prerender: true },
+    "/editor": { ssr: false },
   },
 
-  compatibilityDate: '2025-01-15',
+  compatibilityDate: "2025-01-15",
 
   typescript: {
-    strict: true
+    strict: true,
   },
 
   eslint: {
     config: {
       stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
-    }
-  }
-})
+        quotes: "double",
+        commaDangle: "always-multiline",
+        semi: true,
+        braceStyle: "1tbs",
+        quoteProps: "consistent-as-needed",
+      },
+    },
+  },
+});

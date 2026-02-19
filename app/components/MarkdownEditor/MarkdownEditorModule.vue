@@ -5,6 +5,10 @@
   >
     <div class="markdown-editor-module-controls">
       <template v-if="focused || mouseOver">
+        <span
+          class="drag-handle"
+          title="Drag to reorder"
+        >⠿</span>
         <button
           type="button"
           tabindex="-1"
@@ -114,6 +118,18 @@ watch(innerElementFocus.focused, (isFocused) => {
   .markdown-editor-module-content {
     width: 100%;
     outline: none;
+  }
+
+  .drag-handle {
+    cursor: grab;
+    padding: 0 0.25rem;
+    user-select: none;
+    font-size: 1rem;
+    opacity: 0.5;
+
+    &:active {
+      cursor: grabbing;
+    }
   }
 
   .markdown-editor-module-controls {

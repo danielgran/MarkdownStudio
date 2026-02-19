@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Placeholder } from "@tiptap/extensions";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, useEditor } from "@tiptap/vue-3";
 import { ref } from "vue";
@@ -30,6 +31,9 @@ const state = useReflectiveState({
 
 const editor = useEditor({
   extensions: [
+    Placeholder.configure({
+      placeholder: "Type something...",
+    }),
     StarterKit.configure({
       heading: false,
       codeBlock: false,

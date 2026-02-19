@@ -4,7 +4,7 @@
     class="markdown-editor-context-menu-block-item"
     @click="$emit('click')"
   >
-    <slot></slot>
+    <slot />
   </button>
 </template>
 
@@ -31,21 +31,13 @@ defineEmits<{
   width: 100%;
   text-align: left;
   white-space: nowrap;
-  
+
   &:hover {
     background: #f3f4f6;
   }
-  
+
   &:active {
     transform: scale(0.98);
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    color: #d1d5db;
-    
-    &:hover {
-      background: #374151;
-    }
   }
 }
 </style>

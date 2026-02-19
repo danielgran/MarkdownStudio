@@ -1,5 +1,8 @@
 <template>
-  <MarkdownEditorContextMenu :x="x" :y="y">
+  <MarkdownEditorContextMenu
+    :x="x"
+    :y="y"
+  >
     <div class="markdown-editor-image-context-menu-content">
       <MarkdownEditorContextMenuBlockItem @click="emit('edit-attributes')">
         Edit Attributes
@@ -18,7 +21,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  'edit-attributes': [];
+  "edit-attributes": [];
 }>();
 </script>
 

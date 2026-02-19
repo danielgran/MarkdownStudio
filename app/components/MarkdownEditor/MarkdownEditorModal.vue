@@ -1,10 +1,16 @@
 <template>
   <Teleport to="body">
-    <div v-if="show" class="markdown-editor-modal-overlay" @click.self="emit('close')">
+    <div
+      v-if="show"
+      class="markdown-editor-modal-overlay"
+      @click.self="emit('close')"
+    >
       <div class="markdown-editor-modal">
         <div class="markdown-editor-modal-header">
-          <h3 class="markdown-editor-modal-title">{{ title }}</h3>
-          <button 
+          <h3 class="markdown-editor-modal-title">
+            {{ title }}
+          </h3>
+          <button
             type="button"
             class="markdown-editor-modal-close"
             @click="emit('close')"
@@ -12,21 +18,21 @@
             ×
           </button>
         </div>
-        
+
         <div class="markdown-editor-modal-body">
-          <slot></slot>
+          <slot />
         </div>
-        
+
         <div class="markdown-editor-modal-footer">
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="markdown-editor-modal-button markdown-editor-modal-button-secondary"
             @click="emit('close')"
           >
             Cancel
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="markdown-editor-modal-button markdown-editor-modal-button-primary"
             @click="emit('confirm')"
           >
@@ -68,16 +74,14 @@ const emit = defineEmits<{
 .markdown-editor-modal {
   background: #ffffff;
   border-radius: 0.75rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 32rem;
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  
-  @media (prefers-color-scheme: dark) {
-    background: #1f2937;
-  }
 }
 
 .markdown-editor-modal-header {
@@ -86,10 +90,6 @@ const emit = defineEmits<{
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #e5e7eb;
-  
-  @media (prefers-color-scheme: dark) {
-    border-bottom-color: #374151;
-  }
 }
 
 .markdown-editor-modal-title {
@@ -97,10 +97,6 @@ const emit = defineEmits<{
   font-weight: 600;
   color: #111827;
   margin: 0;
-  
-  @media (prefers-color-scheme: dark) {
-    color: #f9fafb;
-  }
 }
 
 .markdown-editor-modal-close {
@@ -118,19 +114,10 @@ const emit = defineEmits<{
   justify-content: center;
   border-radius: 0.375rem;
   transition: all 0.15s ease;
-  
+
   &:hover {
     background: #f3f4f6;
     color: #111827;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    color: #9ca3af;
-    
-    &:hover {
-      background: #374151;
-      color: #f9fafb;
-    }
   }
 }
 
@@ -146,10 +133,6 @@ const emit = defineEmits<{
   justify-content: flex-end;
   padding: 1.25rem 1.5rem;
   border-top: 1px solid #e5e7eb;
-  
-  @media (prefers-color-scheme: dark) {
-    border-top-color: #374151;
-  }
 }
 
 .markdown-editor-modal-button {
@@ -160,7 +143,7 @@ const emit = defineEmits<{
   border: none;
   cursor: pointer;
   transition: all 0.15s ease;
-  
+
   &:active {
     transform: scale(0.98);
   }
@@ -169,35 +152,18 @@ const emit = defineEmits<{
 .markdown-editor-modal-button-secondary {
   background: #f3f4f6;
   color: #374151;
-  
+
   &:hover {
     background: #e5e7eb;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    background: #374151;
-    color: #d1d5db;
-    
-    &:hover {
-      background: #4b5563;
-    }
   }
 }
 
 .markdown-editor-modal-button-primary {
   background: #3b82f6;
   color: #ffffff;
-  
+
   &:hover {
     background: #2563eb;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    background: #2563eb;
-    
-    &:hover {
-      background: #1d4ed8;
-    }
   }
 }
 </style>
