@@ -74,9 +74,9 @@ onMounted(() => {
 });
 
 const emit = defineEmits<{
-  delete: [];
-  add: [];
-  focus: [];
+  "delete": [];
+  "add": [];
+  "focus": [];
   "update:cursor-position": [number];
   "update:node": [Record<string, unknown>];
   "change-type": [MarkdownAstNode, number];

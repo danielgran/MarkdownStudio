@@ -44,7 +44,7 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
         // Custom Component Syntax here
         // eslint-disable-next-line @stylistic/quotes
         if (text.startsWith('"""') && text.endsWith('"""')) {
-          const moduleName = text.split("\n")[0].slice(3).trim();
+          const moduleName = (text.split("\n")[0] ?? "").slice(3).trim();
           if (moduleName === "MarkdownModuleImage") {
             const srcMatch = text.match(/src:\s*(\S+)/);
             const altMatch = text.match(/alt:\s*(.+)/);
@@ -52,9 +52,9 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
 
             markdownNodes.value.push(
               MarkdownNodeFactory.createImageNode(
-                srcMatch ? srcMatch[1] : "",
-                altMatch ? altMatch[1] : "",
-                captionMatch ? captionMatch[1] : "",
+                srcMatch?.[1] ?? "",
+                altMatch?.[1] ?? "",
+                captionMatch?.[1] ?? "",
               ),
             );
             continue;
@@ -90,6 +90,7 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
         if (isTextNodeType(node.type)) {
           const prefix = {
             [MarkdownNodeType.PARAGRAPH]: "",
+            [MarkdownNodeType.LIST]: "",
             [MarkdownNodeType.HEADLINE1]: "# ",
             [MarkdownNodeType.HEADLINE2]: "## ",
             [MarkdownNodeType.HEADLINE3]: "### ",
@@ -126,14 +127,7 @@ caption: ${node.componentState.caption}
 
   function createNodeWithType(text: string, newType: MarkdownNodeType): MarkdownAstNode {
     if (isTextNodeType(newType)) {
-      return MarkdownNodeFactory.createTextNode(
-        newType as
-        | MarkdownNodeType.PARAGRAPH
-        | MarkdownNodeType.HEADLINE1
-        | MarkdownNodeType.HEADLINE2
-        | MarkdownNodeType.HEADLINE3,
-        text,
-      );
+      return MarkdownNodeFactory.createTextNode(newType, text);
     } else if (newType === MarkdownNodeType.IMAGE) {
       return MarkdownNodeFactory.createImageNode("", "", "");
     } else {

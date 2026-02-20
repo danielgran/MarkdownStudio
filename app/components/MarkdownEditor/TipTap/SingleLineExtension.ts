@@ -13,7 +13,7 @@ export const PreventNewline = Extension.create({
   name: "preventNewline",
   addKeyboardShortcuts() {
     return {
-      Enter: () => true,
+      "Enter": () => true,
       "Shift-Enter": () => true,
     };
   },

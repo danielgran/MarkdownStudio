@@ -3,7 +3,7 @@ import type MarkdownModuleTextState from "../Modules/MarkdownModuleTextState";
 import type MarkdownNodeType from "./MarkdownAstNodeType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class MarkdownAstNode<TState extends Record<string, any> = Record<string, any>> {
+export class MarkdownAstNode<TState extends object = Record<string, any>> {
   id: symbol;
   type: MarkdownNodeType;
   componentState: TState;

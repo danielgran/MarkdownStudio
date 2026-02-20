@@ -1,11 +1,12 @@
 import registry from "../MarkdownComponentRegistry";
 import type MarkdownModuleImageState from "../Modules/MarkdownModuleImageState";
-import type MarkdownModuleTextState from "../Modules/MarkdownModuleTextState";
+import type MarkdownModuleListState from "../Modules/MarkdownModuleListState";
+import MarkdownModuleTextState from "../Modules/MarkdownModuleTextState";
 import { MarkdownAstNode } from "../Types/MarkdownAstNode";
 import MarkdownNodeType, { type TextishNodeType } from "../Types/MarkdownAstNodeType";
 
 class MarkdownNodeFactory {
-  private createNode<TState extends Record<string, unknown>>(
+  private createNode<TState extends object>(
     type: MarkdownNodeType,
     stateData: Partial<TState>,
   ): MarkdownAstNode<TState> {
@@ -32,6 +33,12 @@ class MarkdownNodeFactory {
       alt,
       caption,
     } as MarkdownModuleImageState);
+  }
+
+  createListNode(items: string[]): MarkdownAstNode<MarkdownModuleListState> {
+    return this.createNode<MarkdownModuleListState>(MarkdownNodeType.LIST, {
+      items: items.map(text => new MarkdownModuleTextState({ text })),
+    } as MarkdownModuleListState);
   }
 
   createBlankParagraph(): MarkdownAstNode<MarkdownModuleTextState> {

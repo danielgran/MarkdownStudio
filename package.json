@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "npm run typecheck && npm run lint && nuxt build",
+    "typecheck": "vue-tsc --noEmit",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.90",

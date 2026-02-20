@@ -10,8 +10,8 @@ useHead({
 });
 
 const title = "MarkdownStudio";
-const description =
-  "Write great articles with ease. MarkdownStudio is a distraction-free Markdown editor built for writers who care about quality.";
+const description
+  = "Write great articles with ease. MarkdownStudio is a distraction-free Markdown editor built for writers who care about quality.";
 
 useSeoMeta({
   title,

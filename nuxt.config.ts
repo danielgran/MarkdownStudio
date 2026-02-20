@@ -24,6 +24,11 @@ export default defineNuxtConfig({
 
   typescript: {
     strict: true,
+    tsConfig: {
+      compilerOptions: {
+        strictPropertyInitialization: false,
+      },
+    },
   },
 
   eslint: {

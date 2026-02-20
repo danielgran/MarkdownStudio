@@ -286,8 +286,3 @@ h3 {
   margin: 0;
 }
 </style>
-
-<style lang="scss" scoped>
-.markdown-editor {
-}
-</style>
