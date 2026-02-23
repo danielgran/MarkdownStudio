@@ -7,7 +7,7 @@
     <img
       :src="modelValue.src"
       :alt="modelValue.alt"
-    />
+    >
     <span v-if="modelValue.alt">{{ modelValue.caption }}</span>
 
     <MarkdownEditorImageContextMenu
@@ -31,7 +31,7 @@
             v-model="editForm.src"
             type="text"
             placeholder="https://example.com/image.jpg"
-          />
+          >
         </div>
 
         <div class="markdown-module-image-form-field">
@@ -41,7 +41,7 @@
             v-model="editForm.alt"
             type="text"
             placeholder="Description of the image"
-          />
+          >
         </div>
 
         <div class="markdown-module-image-form-field">
@@ -51,7 +51,7 @@
             v-model="editForm.caption"
             type="text"
             placeholder="Optional caption"
-          />
+          >
         </div>
       </div>
     </MarkdownEditorModal>
@@ -59,8 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import MarkdownEditorImageContextMenu from "../ContextMenu/MarkdownEditorImageContextMenu.vue";
+import { ref, } from "vue";
 import MarkdownEditorModal from "../MarkdownEditorModal.vue";
 import type MarkdownModuleImageState from "./MarkdownModuleImageState";
 
@@ -68,21 +67,21 @@ const divRef = ref<HTMLDivElement>();
 
 const modelValue = defineModel<MarkdownModuleImageState>({
   required: true,
-});
+},);
 
 // Context menu state
-const showContextMenu = ref(false);
-const contextMenuPosition = ref({ x: 0, y: 0 });
+const showContextMenu = ref(false,);
+const contextMenuPosition = ref({ x: 0, y: 0, },);
 
 // Modal state
-const showModal = ref(false);
+const showModal = ref(false,);
 const editForm = ref({
   src: "",
   alt: "",
   caption: "",
-});
+},);
 
-function handleClick(event: MouseEvent) {
+function handleClick(event: MouseEvent,) {
   const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
   contextMenuPosition.value = {
     x: event.clientX,
@@ -118,7 +117,7 @@ function focus() {
   }
 }
 
-defineExpose({ focus });
+defineExpose({ focus, },);
 </script>
 
 <style lang="scss" scoped>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const navigation = [
-  { label: "Home", to: "/" },
-  { label: "Editor", to: "/editor" },
+  { label: "Home", to: "/", },
+  { label: "Editor", to: "/editor", },
 ];
 </script>
 

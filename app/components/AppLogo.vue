@@ -4,6 +4,6 @@
       name="i-lucide-pen-line"
       class="size-5 shrink-0"
     />
-    <span>MarkdownStudio</span>
+    <span>Markdown Studio</span>
   </span>
 </template>

@@ -5,7 +5,7 @@
     :class="{ 'is-active': active }"
     @click="$emit('click')"
   >
-    <slot></slot>
+    <slot />
   </button>
 </template>
 
