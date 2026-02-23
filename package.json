@@ -2,6 +2,7 @@
   "name": "markdownstudio",
   "private": true,
   "type": "module",
+  "version": "1.0.0",
   "scripts": {
     "build": "npm run typecheck && npm run lint && nuxt build",
     "typecheck": "vue-tsc --noEmit",
