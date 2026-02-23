@@ -73,22 +73,22 @@ Minecraft nutzt bis zu drei Kerne für die Kernmechaniken. Zusätzliche Plugins 
 Ideal für temporäre Spielsessions oder kleine private Gruppen.
 
 
-**Minimum (1–4 Spieler)**  
-- CPU: Intel Core 2 Duo / AMD Athlon 64 X2  
-- RAM: 1 GB  
-- Speicher: 150 MB für die Welt  
+**Minimum (1–4 Spieler)**
+- CPU: Intel Core 2 Duo / AMD Athlon 64 X2
+- RAM: 1 GB
+- Speicher: 150 MB für die Welt
 
 
-**Empfohlen (5–10 Spieler)**  
-- CPU: Intel Core 2 Duo / AMD Athlon 64 X2  
-- RAM: 2 GB  
-- Speicher: 200 MB  
+**Empfohlen (5–10 Spieler)**
+- CPU: Intel Core 2 Duo / AMD Athlon 64 X2
+- RAM: 2 GB
+- Speicher: 200 MB
 
 
-**Optimal (10+ Spieler)**  
-- CPU: Intel Core i5-4690 / AMD Ryzen 5 1600  
-- RAM: 4 GB  
-- Speicher: 200 MB SSD  
+**Optimal (10+ Spieler)**
+- CPU: Intel Core i5-4690 / AMD Ryzen 5 1600
+- RAM: 4 GB
+- Speicher: 200 MB SSD
 
 
 Größere Welten, Farmen, Redstone-Maschinen und Mob-Grinder erhöhen die RAM- und CPU-Anforderungen erheblich.
@@ -98,10 +98,10 @@ Größere Welten, Farmen, Redstone-Maschinen und Mob-Grinder erhöhen die RAM- u
 heartbeat.systems-Server bieten moderne CPUs und flexible RAM-Zuteilung, wodurch sie sich ideal eignen für:
 
 
-- Vanilla-SMP-Server  
-- Modded-Server  
-- Plugin-basierte Server (Paper, Purpur, Spigot usw.)  
-- Langfristige Weltprojekte mit hoher Spieleraktivität  
+- Vanilla-SMP-Server
+- Modded-Server
+- Plugin-basierte Server (Paper, Purpur, Spigot usw.)
+- Langfristige Weltprojekte mit hoher Spieleraktivität
 
 
 Mit schnellem SSD-Speicher und starken Single-Core-CPUs ist die Plattform bestens für leistungsintensive Minecraft-Workloads geeignet.
