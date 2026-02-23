@@ -11,6 +11,11 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
+  runtimeConfig: {
+    openaiApiKey: process.env.NUXT_OPENAI_API_KEY,
+    llmProvider: "openai",
+  },
+
   routeRules: {
     "/": { prerender: true },
     "/imprint": { prerender: true },
