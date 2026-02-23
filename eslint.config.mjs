@@ -4,5 +4,6 @@ export default withNuxt({
   rules: {
     "vue/singleline-html-element-content-newline": "off",
     "@stylistic/arrow-parens": "off",
+    "@stylistic/operator-linebreak": "off",
   },
 });
