@@ -34,15 +34,15 @@
 <script lang="ts" setup>
 import { useSortable } from "@vueuse/integrations/useSortable";
 import { nextTick, ref, useTemplateRef } from "vue";
-import useMarkdownProcessor from "./Composable/useMarkdownProcessor";
+import type { MarkdownEditorInstance } from "./Composable/useMarkdownEditor";
 import MarkdownEditorTextSelectionContextMenu from "./ContextMenu/MarkdownEditorTextSelectionContextMenu.vue";
 import { isTextNodeState as isTextishNode } from "./MarkdownComponentRegistry";
 import MarkdownEditorModule from "./MarkdownEditorModule.vue";
 import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 import type MarkdownNodeType from "./Types/MarkdownAstNodeType";
 
-const modelValue = defineModel<string>();
-const { markdownNodes, deleteNode, addBlankNode, replaceNodeType, moveNode } = useMarkdownProcessor(modelValue);
+const props = defineProps<{ editor: MarkdownEditorInstance }>();
+const { markdownNodes, deleteNode, addBlankNode, replaceNodeType, moveNode } = props.editor;
 
 const editorContainerRef = useTemplateRef("editorContainerRef");
 useSortable(editorContainerRef, markdownNodes, {

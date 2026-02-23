@@ -1,8 +1,5 @@
 export default defineNuxtConfig({
-  modules: [
-    "@nuxt/eslint",
-    "@nuxt/ui",
-  ],
+  modules: ["@nuxt/eslint", "@nuxt/ui", "@pinia/nuxt", "pinia-plugin-persistedstate/nuxt"],
 
   imports: {
     autoImport: false,
@@ -21,6 +18,17 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: "2025-01-15",
+
+  nitro: {
+    imports: {
+      autoImport: true,
+    },
+    rollupConfig: {
+      output: {
+        hoistTransitiveImports: false,
+      },
+    },
+  },
 
   typescript: {
     strict: true,
