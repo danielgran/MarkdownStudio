@@ -1,4 +1,3 @@
-import { defineVitestProject } from "@nuxt/test-utils/config";
 import vue from "@vitejs/plugin-vue";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
