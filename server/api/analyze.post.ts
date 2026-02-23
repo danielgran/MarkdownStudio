@@ -1,6 +1,6 @@
-import type { AnalyzeRequest } from "./Types/AnalyzeRequest";
-import type { AnalyzeResponse } from "./Types/AnalyzeResponse";
-import { createLlmStrategy, type LlmProviderName } from "./Types/LlmStrategyUtility";
+import type { AnalyzeRequest, } from "./Types/AnalyzeRequest";
+import type { AnalyzeResponse, } from "./Types/AnalyzeResponse";
+import { createLlmStrategy, type LlmProviderName, } from "./Types/LlmStrategyUtility";
 
 interface LlmReport {
   score: number;
@@ -43,7 +43,7 @@ Return a JSON object with a single key "report" containing:
 Return ONLY valid JSON. No markdown, no extra text.
 `;
 
-function buildUserPrompt(request: AnalyzeRequest): string {
+function buildUserPrompt(request: AnalyzeRequest,): string {
   return `Target Audience: ${request.targetAudience}
 
 Core Idea: ${request.coreIdea}
@@ -54,15 +54,15 @@ Paragraph to evaluate:
 ${request.paragraph}`;
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event,) => {
   const config = useRuntimeConfig();
-  const body = await readBody<AnalyzeRequest>(event);
+  const body = await readBody<AnalyzeRequest>(event,);
 
   if (!body.targetAudience || !body.coreIdea || !body.paragraph?.trim() || !body.moduleType) {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields: targetAudience, coreIdea, paragraph, and moduleType",
-    });
+    },);
   }
 
   const apiKey = config.openaiApiKey;
@@ -70,20 +70,20 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage: "OpenAI API key is not configured. Set NUXT_OPENAI_API_KEY in your environment.",
-    });
+    },);
   }
 
   const provider = config.llmProvider as LlmProviderName;
-  const strategy = createLlmStrategy(provider);
+  const strategy = createLlmStrategy(provider,);
 
-  const userPrompt = buildUserPrompt(body);
+  const userPrompt = buildUserPrompt(body,);
 
   try {
-    const rawResponse = await strategy.complete(SYSTEM_PROMPT, userPrompt);
-    const parsed: LlmAnalysisResponse = JSON.parse(rawResponse);
+    const rawResponse = await strategy.complete(SYSTEM_PROMPT, userPrompt,);
+    const parsed: LlmAnalysisResponse = JSON.parse(rawResponse,);
 
     if (!parsed.report || typeof parsed.report !== "object") {
-      throw new Error("LLM response does not contain a valid 'report' object");
+      throw new Error("LLM response does not contain a valid 'report' object",);
     }
 
     const report = parsed.report;
@@ -98,6 +98,6 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 502,
       statusMessage: `LLM processing failed: ${message}`,
-    });
+    },);
   }
-});
+},);

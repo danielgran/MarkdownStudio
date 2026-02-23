@@ -4,7 +4,7 @@ export default class TextishParagraphReport {
 
   suggestion: string;
 
-  constructor(value: TextishParagraphReport) {
-    Object.assign(this, value);
+  constructor(value: TextishParagraphReport,) {
+    Object.assign(this, value,);
   }
 }

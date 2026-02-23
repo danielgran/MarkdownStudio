@@ -24,9 +24,9 @@ export const HEADLINE_TYPE_MAP: HeadlineTypeEntry[] = [
   },
 ];
 
-export function detectHeadlineTypeFromContent(content: string): MarkdownNodeType | null {
+export function detectHeadlineTypeFromContent(content: string,): MarkdownNodeType | null {
   for (const entry of HEADLINE_TYPE_MAP) {
-    if (content.startsWith(entry.prefix)) {
+    if (content.startsWith(entry.prefix,)) {
       return entry.type;
     }
   }

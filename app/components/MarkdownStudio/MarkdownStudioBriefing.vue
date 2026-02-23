@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { UButton, UInput } from "#components";
+import { UButton, UInput, } from "#components";
 
 defineProps<{
   targetAudience: string;
@@ -51,8 +51,8 @@ defineProps<{
 }>();
 
 defineEmits<{
-  "update:targetAudience": [value: string];
-  "update:coreIdea": [value: string];
+  "update:targetAudience": [value: string,];
+  "update:coreIdea": [value: string,];
   "analyze": [];
 }>();
 </script>

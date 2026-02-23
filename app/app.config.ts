@@ -1,4 +1,4 @@
-import { defineAppConfig } from "#imports";
+import { defineAppConfig, } from "#imports";
 
 export default defineAppConfig({
   ui: {
@@ -7,4 +7,4 @@ export default defineAppConfig({
       neutral: "zinc",
     },
   },
-});
+},);

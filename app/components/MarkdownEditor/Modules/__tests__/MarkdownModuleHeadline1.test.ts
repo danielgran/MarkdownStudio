@@ -1,5 +1,5 @@
-import { shallowMount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
+import { shallowMount, } from "@vue/test-utils";
+import { describe, expect, it, } from "vitest";
 import MarkdownModuleHeadline1 from "../MarkdownModuleHeadline1.vue";
 import MarkdownModuleTextState from "../MarkdownModuleTextState";
 
@@ -7,9 +7,9 @@ describe("MarkdownModuleHeadline1", () => {
   function getComponent() {
     return shallowMount(MarkdownModuleHeadline1, {
       props: {
-        modelValue: new MarkdownModuleTextState({ text: "" }),
+        modelValue: new MarkdownModuleTextState({ text: "", },),
       },
-    });
+    },);
   }
 
   it("renders correctly with default props", async () => {
@@ -19,6 +19,6 @@ describe("MarkdownModuleHeadline1", () => {
     // Act
 
     // Assert
-    expect(wrapper.element).toMatchSnapshot();
-  });
-});
+    expect(wrapper.element,).toMatchSnapshot();
+  },);
+},);

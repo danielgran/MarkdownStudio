@@ -31,15 +31,15 @@
 </template>
 
 <script setup lang="ts">
-import { watchDebounced } from "@vueuse/core";
-import { computed, onBeforeMount, ref } from "vue";
-import { useMarkdownStudioService } from "~/ApiServices/MarkdownStudioService";
+import { watchDebounced, } from "@vueuse/core";
+import { computed, onBeforeMount, ref, } from "vue";
+import { useMarkdownStudioService, } from "~/ApiServices/MarkdownStudioService";
 import useMarkdownStudioStore from "~/Stores/MarkdownStudioStore/MarkdownStudioStore";
-import { useMarkdownEditor } from "../MarkdownEditor/Composable/useMarkdownEditor";
-import { isTextNodeState } from "../MarkdownEditor/MarkdownComponentRegistry";
+import { useMarkdownEditor, } from "../MarkdownEditor/Composable/useMarkdownEditor";
+import { isTextNodeState, } from "../MarkdownEditor/MarkdownComponentRegistry";
 import MarkdownEditor from "../MarkdownEditor/MarkdownEditor.vue";
-import type { MarkdownAstNode } from "../MarkdownEditor/Types/MarkdownAstNode";
-import { MarkdownEditorAstNodeTypeMapping } from "./MarkdownEditorAstNodeTypeMapping";
+import type { MarkdownAstNode, } from "../MarkdownEditor/Types/MarkdownAstNode";
+import { MarkdownEditorAstNodeTypeMapping, } from "./MarkdownEditorAstNodeTypeMapping";
 import MarkdownStudioBriefing from "./MarkdownStudioBriefing.vue";
 import MarkdownStudioSidebar from "./MarkdownStudioSidebar.vue";
 import MarkdownStudioToolbar from "./MarkdownStudioToolbar.vue";
@@ -112,83 +112,83 @@ Einen Minecraft-Server zu betreiben muss nicht kompliziert sein. Mit der richtig
 
 const studioStore = useMarkdownStudioStore()();
 const markdownStudioService = useMarkdownStudioService();
-const editor = useMarkdownEditor(template);
-const { markdownNodes } = editor;
+const editor = useMarkdownEditor(template,);
+const { markdownNodes, } = editor;
 
 const targetAudience = computed({
   get: () => studioStore.targetAudience,
-  set: (value: string) => {
+  set: (value: string,) => {
     studioStore.targetAudience = value;
   },
-});
+},);
 const coreIdea = computed({
   get: () => studioStore.coreIdea,
-  set: (value: string) => {
+  set: (value: string,) => {
     studioStore.coreIdea = value;
   },
-});
-const reportsMap = ref<Map<symbol, TextishParagraphReport>>(new Map());
-const pendingRequests = ref(0);
-const errorMessage = ref("");
+},);
+const reportsMap = ref<Map<symbol, TextishParagraphReport>>(new Map(),);
+const pendingRequests = ref(0,);
+const errorMessage = ref("",);
 
-const stringencyReport = ref<TextishParagraphReport | null>(null);
-const isStringencyLoading = ref(false);
-const stringencyError = ref("");
+const stringencyReport = ref<TextishParagraphReport | null>(null,);
+const isStringencyLoading = ref(false,);
+const stringencyError = ref("",);
 
-const isLoading = computed(() => pendingRequests.value > 0);
+const isLoading = computed(() => pendingRequests.value > 0,);
 
-onBeforeMount(() => {});
+onBeforeMount(() => { },);
 
 const paragraphReports = computed(() => {
   return markdownNodes.value
-    .map((node: MarkdownAstNode) => reportsMap.value.get(node.id))
-    .filter((r): r is TextishParagraphReport => r !== undefined);
-});
+    .map((node: MarkdownAstNode,) => reportsMap.value.get(node.id,),)
+    .filter((r,): r is TextishParagraphReport => r !== undefined,);
+},);
 
 // Snapshot for detecting which node text changed between debounce ticks
 const nodeTextSnapshot = new Map<symbol, string>();
 
-function getNodeText(node: MarkdownAstNode): string | null {
-  return isTextNodeState(node) ? node.componentState.text : null;
+function getNodeText(node: MarkdownAstNode,): string | null {
+  return isTextNodeState(node,) ? node.componentState.text : null;
 }
 
 watchDebounced(
   markdownNodes,
-  (nodes: MarkdownAstNode[]) => {
+  (nodes: MarkdownAstNode[],) => {
     const changedNodes: MarkdownAstNode[] = [];
 
     for (const node of nodes) {
-      const text = getNodeText(node);
+      const text = getNodeText(node,);
       if (text === null) continue;
 
-      const previousText = nodeTextSnapshot.get(node.id);
+      const previousText = nodeTextSnapshot.get(node.id,);
       if (previousText !== text) {
-        changedNodes.push(node);
+        changedNodes.push(node,);
       }
-      nodeTextSnapshot.set(node.id, text);
+      nodeTextSnapshot.set(node.id, text,);
     }
 
     // Remove reports for deleted nodes
-    const currentIds = new Set(nodes.map((n: MarkdownAstNode) => n.id));
+    const currentIds = new Set(nodes.map((n: MarkdownAstNode,) => n.id,),);
     for (const id of nodeTextSnapshot.keys()) {
-      if (!currentIds.has(id)) {
-        nodeTextSnapshot.delete(id);
-        const updated = new Map(reportsMap.value);
-        updated.delete(id);
+      if (!currentIds.has(id,)) {
+        nodeTextSnapshot.delete(id,);
+        const updated = new Map(reportsMap.value,);
+        updated.delete(id,);
         reportsMap.value = updated;
       }
     }
 
     for (const node of changedNodes) {
-      analyzeNode(node);
+      analyzeNode(node,);
     }
   },
-  { debounce: 1000, deep: true },
+  { debounce: 1000, deep: true, },
 );
 
-async function analyzeNode(node: MarkdownAstNode) {
+async function analyzeNode(node: MarkdownAstNode,) {
   if (!targetAudience.value || !coreIdea.value) return;
-  if (!isTextNodeState(node)) return;
+  if (!isTextNodeState(node,)) return;
 
   const text = node.componentState.text.trim();
   if (!text) return;
@@ -202,15 +202,15 @@ async function analyzeNode(node: MarkdownAstNode) {
       coreIdea: coreIdea.value,
       paragraph: text,
       moduleType: MarkdownEditorAstNodeTypeMapping[node.type],
-    });
+    },);
 
-    reportsMap.value = new Map(reportsMap.value).set(
+    reportsMap.value = new Map(reportsMap.value,).set(
       node.id,
       new TextishParagraphReport({
         score: result.score,
         recommendation: result.recommendation,
         suggestion: result.suggestion,
-      }),
+      },),
     );
   } catch (error: unknown) {
     errorMessage.value = error instanceof Error ? error.message : "Analysis failed";
@@ -222,7 +222,7 @@ async function analyzeNode(node: MarkdownAstNode) {
 async function analyzeAllNodes() {
   const nodes: MarkdownAstNode[] = markdownNodes.value;
   for (const node of nodes) {
-    analyzeNode(node);
+    analyzeNode(node,);
   }
   analyzeStringency();
 }
@@ -232,9 +232,9 @@ async function analyzeStringency() {
 
   const nodes: MarkdownAstNode[] = markdownNodes.value;
   const fullText = nodes
-    .map((node) => (isTextNodeState(node) ? node.componentState.text.trim() : ""))
-    .filter((t) => t.length > 0)
-    .join("\n\n");
+    .map((node,) => (isTextNodeState(node,) ? node.componentState.text.trim() : ""),)
+    .filter((t,) => t.length > 0,)
+    .join("\n\n",);
 
   if (!fullText) return;
 
@@ -246,13 +246,13 @@ async function analyzeStringency() {
       targetAudience: targetAudience.value,
       coreIdea: coreIdea.value,
       fullText,
-    });
+    },);
 
     stringencyReport.value = new TextishParagraphReport({
       score: result.score,
       recommendation: result.recommendation,
       suggestion: result.suggestion,
-    });
+    },);
   } catch (error: unknown) {
     stringencyError.value = error instanceof Error ? error.message : "Stringency analysis failed";
   } finally {

@@ -14,7 +14,7 @@ export type TextishNodeType
     | MarkdownNodeType.HEADLINE2
     | MarkdownNodeType.HEADLINE3;
 
-export function isTextNodeType(type: MarkdownNodeType): type is TextishNodeType {
+export function isTextNodeType(type: MarkdownNodeType,): type is TextishNodeType {
   return (
     type === MarkdownNodeType.PARAGRAPH
     || type === MarkdownNodeType.LIST
