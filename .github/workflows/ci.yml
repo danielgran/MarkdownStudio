@@ -32,6 +32,9 @@ jobs:
       - name: Build
         id: build
         run: |
+          git config --global user.name "ci-bot"
+          git config --global user.email "ci-bot@heartbeat.systems"
+          
           # This is a workaround for the issue with the `npm version` command
           # in the GitHub Actions environment. It sets the user name and email
           # for the Git configuration, which is required for the `npm version` command.
