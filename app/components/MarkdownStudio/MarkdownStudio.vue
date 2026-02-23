@@ -30,15 +30,16 @@
 <script setup lang="ts">
 import { watchDebounced } from "@vueuse/core";
 import { computed, onBeforeMount, ref } from "vue";
+import { useMarkdownStudioService } from "~/ApiServices/MarkdownStudioService";
 import useMarkdownStudioStore from "~/Stores/MarkdownStudioStore/MarkdownStudioStore";
 import { useMarkdownEditor } from "../MarkdownEditor/Composable/useMarkdownEditor";
 import { isTextNodeState } from "../MarkdownEditor/MarkdownComponentRegistry";
 import MarkdownEditor from "../MarkdownEditor/MarkdownEditor.vue";
 import type { MarkdownAstNode } from "../MarkdownEditor/Types/MarkdownAstNode";
+import { MarkdownEditorAstNodeTypeMapping } from "./MarkdownEditorAstNodeTypeMapping";
 import MarkdownStudioBriefing from "./MarkdownStudioBriefing.vue";
 import MarkdownStudioSidebar from "./MarkdownStudioSidebar.vue";
 import MarkdownStudioToolbar from "./MarkdownStudioToolbar.vue";
-import AnalysisRequest from "./Types/AnalysisRequest";
 import TextishParagraphReport from "./Types/TextishParagraphReport";
 
 const template = `
@@ -107,6 +108,7 @@ Mit schnellem SSD-Speicher und starken Single-Core-CPUs ist die Plattform besten
 Einen Minecraft-Server zu betreiben muss nicht kompliziert sein. Mit der richtigen CPU, ausreichend RAM und solidem Hosting von heartbeat.systems genießen Ihre Spieler ein flüssiges und zuverlässiges Spielerlebnis. Dieser Leitfaden bietet einen einfachen Einstieg, um die passenden Ressourcen zu wählen und Leistungsprobleme zu vermeiden.`;
 
 const studioStore = useMarkdownStudioStore()();
+const markdownStudioService = useMarkdownStudioService();
 const editor = useMarkdownEditor(template);
 const { markdownNodes } = editor;
 
@@ -188,16 +190,11 @@ async function analyzeNode(node: MarkdownAstNode) {
   errorMessage.value = "";
 
   try {
-    const request = new AnalysisRequest({
+    const result = await markdownStudioService.analyze({
       targetAudience: targetAudience.value,
       coreIdea: coreIdea.value,
       paragraph: text,
-    });
-
-    const result = await $fetch<{ score: number; recommendation: string; suggestion: string }>("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
+      moduleType: MarkdownEditorAstNodeTypeMapping[node.type],
     });
 
     reportsMap.value = new Map(reportsMap.value).set(
