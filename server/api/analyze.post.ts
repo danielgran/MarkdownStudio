@@ -38,7 +38,7 @@ Scoring rules (strictly enforced):
 Return a JSON object with a single key "report" containing:
 - "score": an integer from 0 to 100 (100 = excellent).
 - "recommendation": a short, actionable suggestion for improvement (1-2 sentences) to reach 100. If the module is strong, acknowledge that with one word.
-- "suggestion": a specific rewrite of the module that addresses the recommendation. If the module is strong, repeat the original content.
+- "suggestion": A specific rewrite of the original text which would score 100. Don't return if the original text is already strong.
 
 Return ONLY valid JSON. No markdown, no extra text.
 `;

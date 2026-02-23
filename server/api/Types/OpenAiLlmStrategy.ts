@@ -8,7 +8,7 @@ export default class OpenAiLlmStrategy implements LlmStrategy {
   private client: OpenAI;
   private model: string;
 
-  constructor(apiKey: string, model: string = "gpt-5-nano") {
+  constructor(apiKey: string, model: string = "gpt-4.1-nano") {
     this.client = new OpenAI({ apiKey });
     this.model = model;
   }

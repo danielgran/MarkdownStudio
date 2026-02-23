@@ -21,6 +21,9 @@
           :reports="paragraphReports"
           :is-loading="isLoading"
           :error="errorMessage"
+          :stringency-report="stringencyReport"
+          :is-stringency-loading="isStringencyLoading"
+          :stringency-error="stringencyError"
         />
       </div>
     </div>
@@ -128,6 +131,10 @@ const reportsMap = ref<Map<symbol, TextishParagraphReport>>(new Map());
 const pendingRequests = ref(0);
 const errorMessage = ref("");
 
+const stringencyReport = ref<TextishParagraphReport | null>(null);
+const isStringencyLoading = ref(false);
+const stringencyError = ref("");
+
 const isLoading = computed(() => pendingRequests.value > 0);
 
 onBeforeMount(() => {});
@@ -199,7 +206,11 @@ async function analyzeNode(node: MarkdownAstNode) {
 
     reportsMap.value = new Map(reportsMap.value).set(
       node.id,
-      new TextishParagraphReport({ score: result.score, recommendation: result.recommendation }),
+      new TextishParagraphReport({
+        score: result.score,
+        recommendation: result.recommendation,
+        suggestion: result.suggestion,
+      }),
     );
   } catch (error: unknown) {
     errorMessage.value = error instanceof Error ? error.message : "Analysis failed";
@@ -212,6 +223,40 @@ async function analyzeAllNodes() {
   const nodes: MarkdownAstNode[] = markdownNodes.value;
   for (const node of nodes) {
     analyzeNode(node);
+  }
+  analyzeStringency();
+}
+
+async function analyzeStringency() {
+  if (!targetAudience.value || !coreIdea.value) return;
+
+  const nodes: MarkdownAstNode[] = markdownNodes.value;
+  const fullText = nodes
+    .map((node) => (isTextNodeState(node) ? node.componentState.text.trim() : ""))
+    .filter((t) => t.length > 0)
+    .join("\n\n");
+
+  if (!fullText) return;
+
+  isStringencyLoading.value = true;
+  stringencyError.value = "";
+
+  try {
+    const result = await markdownStudioService.analyzeStringency({
+      targetAudience: targetAudience.value,
+      coreIdea: coreIdea.value,
+      fullText,
+    });
+
+    stringencyReport.value = new TextishParagraphReport({
+      score: result.score,
+      recommendation: result.recommendation,
+      suggestion: result.suggestion,
+    });
+  } catch (error: unknown) {
+    stringencyError.value = error instanceof Error ? error.message : "Stringency analysis failed";
+  } finally {
+    isStringencyLoading.value = false;
   }
 }
 </script>
