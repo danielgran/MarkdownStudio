@@ -33,7 +33,6 @@ function useReflectiveState<T extends MarkdownModuleTextState>(options: {
   }
 
   function handleTipTapUpdateEvent(event: EditorEvents["update"]) {
-    console.log("Handled TipTap update event. Current HTML:", event);
     emit(event.editor.getHTML());
     emitCursorPosition(event.transaction.selection.anchor);
     const markdown = htmlToMarkdown(event.editor.getHTML());
