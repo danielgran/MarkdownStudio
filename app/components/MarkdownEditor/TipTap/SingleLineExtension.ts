@@ -1,13 +1,13 @@
-import { Extension, } from "@tiptap/core";
-import { Document, } from "@tiptap/extension-document";
+import { Extension } from "@tiptap/core";
+import { Document } from "@tiptap/extension-document";
 
 export const SingleLineDocument = Document.extend({
   content: "block",
-},);
+});
 
 export const HeadingDocument = Document.extend({
-  content: "heading",
-},);
+  content: "heading+",
+});
 
 export const PreventNewline = Extension.create({
   name: "preventNewline",
@@ -17,13 +17,5 @@ export const PreventNewline = Extension.create({
       "Shift-Enter": () => true,
     };
   },
-},);
+});
 
-export const InlineCodeShortcut = Extension.create({
-  name: "inlineCodeShortcut",
-  addKeyboardShortcuts() {
-    return {
-      "Mod-e": () => this.editor.commands.toggleCode(),
-    };
-  },
-},);

@@ -32,58 +32,61 @@
 </template>
 
 <script lang="ts" setup>
-import { useSortable, } from "@vueuse/integrations/useSortable";
-import { nextTick, ref, useTemplateRef, } from "vue";
-import type { MarkdownEditorInstance, } from "./Composable/useMarkdownEditor";
+import { useSortable } from "@vueuse/integrations/useSortable";
+import { nextTick, ref, useTemplateRef } from "vue";
+import type { MarkdownEditorInstance } from "./Composable/useMarkdownEditor";
 import MarkdownEditorTextSelectionContextMenu from "./ContextMenu/MarkdownEditorTextSelectionContextMenu.vue";
-import { isTextNodeState as isTextishNode, } from "./MarkdownComponentRegistry";
+import { isTextNodeState as isTextishNode } from "./MarkdownComponentRegistry";
 import MarkdownEditorModule from "./MarkdownEditorModule.vue";
-import type { MarkdownAstNode, } from "./Types/MarkdownAstNode";
+import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 import type MarkdownNodeType from "./Types/MarkdownAstNodeType";
 
 const props = defineProps<{ editor: MarkdownEditorInstance }>();
-const { markdownNodes, deleteNode, addBlankNode, replaceNodeType, moveNode, } = props.editor;
+const { markdownNodes, deleteNode, addBlankNode, replaceNodeType, moveNode } = props.editor;
 
-const editorContainerRef = useTemplateRef("editorContainerRef",);
+const editorContainerRef = useTemplateRef("editorContainerRef");
 useSortable(editorContainerRef, markdownNodes, {
   handle: ".drag-handle",
   animation: 150,
-  onUpdate: (e,) => {
-    moveNode(e.oldIndex!, e.newIndex!,);
+  onUpdate: (e) => {
+    moveNode(e.oldIndex!, e.newIndex!);
   },
-},);
-const focusedNode = ref<MarkdownAstNode | null>(null,);
+});
+const focusedNode = ref<MarkdownAstNode | null>(null);
 
 // Context menu state
-const showContextMenu = ref(false,);
-const contextMenuPosition = ref({ x: 0, y: 0, },);
+const showContextMenu = ref(false);
+const contextMenuPosition = ref({ x: 0, y: 0 });
 const contextMenuActiveStates = ref({
   bold: false,
   italic: false,
   underline: false,
-},);
+});
 let selectionDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-function handleUpdateCursorPosition(node: MarkdownAstNode, position: number,) {
+function handleUpdateCursorPosition(node: MarkdownAstNode, position: number) {
   node.editingState.cursorPosition = position;
 }
 
-function handleChangeType(node: MarkdownAstNode, newType: number,) {
-  const result = replaceNodeType(node, newType as MarkdownNodeType,);
+function handleChangeType(node: MarkdownAstNode, newType: MarkdownNodeType) {
+  const result = replaceNodeType(node, newType);
 
   if (result) {
-    focusedNode.value = result.newNode;
-    nextTick(() => focusNodeByIndex(result.index,),);
+    if (isTextishNode(result.newNode)) {
+      console.log("slicing at cursor position", node.editingState.cursorPosition);
+      result.newNode.componentState.text = node.componentState.text.slice(node.editingState.cursorPosition);
+    }
+    focusNodeByIndex(result.index);
   }
 }
 
-function handleKeyDownOnNode(node: MarkdownAstNode, event: KeyboardEvent,) {
-  const nodeIndex = markdownNodes.value.indexOf(node,);
+function handleKeyDownOnNode(node: MarkdownAstNode, event: KeyboardEvent) {
+  const nodeIndex = markdownNodes.value.indexOf(node);
 
   if (event.key === "Enter") {
-    handleEnter(nodeIndex, event,);
+    handleEnter(nodeIndex, event);
   } else if (event.key === "Backspace") {
-    handleBackspace(nodeIndex,);
+    handleBackspace(nodeIndex);
   } else if (event.key === "ArrowUp") {
     moveFocusOneUp();
     event.preventDefault();
@@ -91,65 +94,65 @@ function handleKeyDownOnNode(node: MarkdownAstNode, event: KeyboardEvent,) {
     moveFocusOneDown();
     event.preventDefault();
   } else if (event.key === "Delete") {
-    handleDelete(nodeIndex,);
+    handleDelete(nodeIndex);
   }
 }
 
-function handleEnter(nodeIndex: number, event: KeyboardEvent,) {
-  addBlankNode(nodeIndex,);
+function handleEnter(nodeIndex: number, event: KeyboardEvent) {
+  addBlankNode(nodeIndex);
   moveFocusOneDown();
   event.preventDefault();
 }
 
-function handleBackspace(index: number,) {
-  const node = getNodeByIndex(index,);
+function handleBackspace(index: number) {
+  const node = getNodeByIndex(index);
 
-  if (!isTextishNode(node,)) return;
+  if (!isTextishNode(node)) return;
   if (node.componentState.text !== "") return;
 
-  deleteNode(index,);
+  deleteNode(index);
 
   nextTick(() => {
     const newIndex = index > 0 ? index - 1 : 0;
-    focusNodeByIndex(newIndex,);
-  },);
+    focusNodeByIndex(newIndex);
+  });
 }
 
-function handleDelete(index: number,) {
-  const node = getNodeByIndex(index,);
+function handleDelete(index: number) {
+  const node = getNodeByIndex(index);
 
-  if (!isTextishNode(node,)) return;
+  if (!isTextishNode(node)) return;
   if (node.componentState.text !== "") return;
 
-  deleteNode(index,);
-  focusNodeByIndex(index,);
+  deleteNode(index);
+  focusNodeByIndex(index);
 }
 
 function handleClickBlankArea() {
-  console.log("Clicked blank area",);
+  console.log("Clicked blank area");
   const lastNode = markdownNodes.value[markdownNodes.value.length - 1];
-  if (lastNode && isTextishNode(lastNode,) && lastNode.componentState.text === "") {
+  if (lastNode && isTextishNode(lastNode) && lastNode.componentState.text === "") {
     focusedNode.value = lastNode;
     return;
   }
 
   const newIndex = markdownNodes.value.length;
 
-  addBlankNode(newIndex,);
-  focusNodeByIndex(newIndex,);
+  addBlankNode(newIndex);
+  focusNodeByIndex(newIndex);
 }
 
-function focusNodeByIndex(index: number,) {
+function focusNodeByIndex(index: number) {
   const node = markdownNodes.value[index];
   if (!node) return;
   nextTick(() => {
     focusedNode.value = node;
-  },);
+  });
 }
 
-function getNodeByIndex(index: number,): MarkdownAstNode {
+function getNodeByIndex(index: number): MarkdownAstNode {
   const node = markdownNodes.value[index];
-  if (!node) throw new Error("Node not found at index " + index,);
+  if (!node) throw new Error("Node not found at index " + index);
   return node;
 }
 
@@ -160,11 +163,11 @@ function moveFocusOneUp() {
     const currentNode = focusedNode.value;
     if (!currentNode) return;
 
-    const index = markdownNodes.value.indexOf(currentNode,);
+    const index = markdownNodes.value.indexOf(currentNode);
     if (index > 0) {
-      focusedNode.value = getNodeByIndex(index - 1,);
+      focusedNode.value = getNodeByIndex(index - 1);
     }
-  },);
+  });
 }
 
 function moveFocusOneDown() {
@@ -173,18 +176,18 @@ function moveFocusOneDown() {
   nextTick(() => {
     const currentNode = focusedNode.value;
     if (!currentNode) return;
-    const index = markdownNodes.value.indexOf(currentNode,);
+    const index = markdownNodes.value.indexOf(currentNode);
     if (index < markdownNodes.value.length - 1) {
-      focusedNode.value = getNodeByIndex(index + 1,);
+      focusedNode.value = getNodeByIndex(index + 1);
     }
-  },);
+  });
 }
 
 // Context menu handlers
 function handleMouseUp() {
   // Clear existing timer
   if (selectionDebounceTimer) {
-    clearTimeout(selectionDebounceTimer,);
+    clearTimeout(selectionDebounceTimer);
   }
 
   const selection = window.getSelection();
@@ -196,7 +199,7 @@ function handleMouseUp() {
 
   // Debounce: wait 500ms before showing context menu
   selectionDebounceTimer = setTimeout(() => {
-    const range = selection.getRangeAt(0,);
+    const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
 
     // Position the context menu above the selection
@@ -209,20 +212,20 @@ function handleMouseUp() {
     const parentElement = range.commonAncestorContainer.parentElement;
     if (parentElement) {
       contextMenuActiveStates.value = {
-        bold: isElementOrParentTagName(parentElement, ["STRONG", "B",],),
-        italic: isElementOrParentTagName(parentElement, ["EM", "I",],),
-        underline: isElementOrParentTagName(parentElement, ["U",],),
+        bold: isElementOrParentTagName(parentElement, ["STRONG", "B"]),
+        italic: isElementOrParentTagName(parentElement, ["EM", "I"]),
+        underline: isElementOrParentTagName(parentElement, ["U"]),
       };
     }
 
     showContextMenu.value = true;
-  }, 500,);
+  }, 500);
 }
 
-function isElementOrParentTagName(element: HTMLElement, tagNames: string[],): boolean {
+function isElementOrParentTagName(element: HTMLElement, tagNames: string[]): boolean {
   let current: HTMLElement | null = element;
   while (current) {
-    if (tagNames.includes(current.tagName,)) {
+    if (tagNames.includes(current.tagName)) {
       return true;
     }
     current = current.parentElement;
@@ -231,17 +234,17 @@ function isElementOrParentTagName(element: HTMLElement, tagNames: string[],): bo
 }
 
 function toggleBold() {
-  document.execCommand("bold",);
+  document.execCommand("bold");
   showContextMenu.value = false;
 }
 
 function toggleItalic() {
-  document.execCommand("italic",);
+  document.execCommand("italic");
   showContextMenu.value = false;
 }
 
 function toggleUnderline() {
-  document.execCommand("underline",);
+  document.execCommand("underline");
   showContextMenu.value = false;
 }
 </script>

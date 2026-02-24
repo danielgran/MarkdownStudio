@@ -7,16 +7,16 @@
 
 <script lang="ts" setup>
 import StarterKit from "@tiptap/starter-kit";
-import { EditorContent, useEditor, } from "@tiptap/vue-3";
-import { ref, } from "vue";
+import { EditorContent, useEditor } from "@tiptap/vue-3";
+import { ref } from "vue";
 import useReflectiveState from "../Composable/useReflectiveState";
-import { HeadingDocument, InlineCodeShortcut, PreventNewline, } from "../TipTap/SingleLineExtension";
-import type { TextishEmits, } from "../Types/TextishEmits";
+import { HeadingDocument, PreventNewline } from "../TipTap/SingleLineExtension";
+import type { TextishEmits } from "../Types/TextishEmits";
 import type MarkdownModuleTextState from "./MarkdownModuleTextState";
 
 const modelValue = defineModel<MarkdownModuleTextState>({
   required: true,
-},);
+});
 
 const editorRef = ref<InstanceType<typeof EditorContent>>();
 
@@ -26,7 +26,7 @@ const state = useReflectiveState({
   modelRef: modelValue,
   emit,
   editorRef,
-},);
+});
 
 const editor = useEditor({
   extensions: [
@@ -35,7 +35,7 @@ const editor = useEditor({
       document: false,
       paragraph: false,
       heading: {
-        levels: [2,],
+        levels: [2],
       },
       codeBlock: false,
       blockquote: false,
@@ -44,18 +44,14 @@ const editor = useEditor({
       bulletList: false,
       orderedList: false,
       listItem: false,
-    },),
+    }),
     PreventNewline,
-    InlineCodeShortcut,
   ],
   content: `<h2>${state.editorContent.value}</h2>`,
-  onUpdate: ({ editor, },) => {
-    const html = editor.getHTML().replace(/^<h[1-6]>([\s\S]*)<\/h[1-6]>$/, "$1",);
-    state.handleInput(html,);
-  },
-},);
+  onUpdate: (event) => state.handleTipTapUpdateEvent(event),
+});
 
-defineExpose(state.expose,);
+defineExpose(state.expose);
 </script>
 
 <style lang="scss" scoped>

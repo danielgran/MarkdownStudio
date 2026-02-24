@@ -6,12 +6,11 @@ export default withNuxt({
     "@stylistic/arrow-parens": "off",
     "@stylistic/operator-linebreak": "off",
     // Formatting rules to replace Prettier
-    "@stylistic/indent": ["error", 2,],
-    "@stylistic/quotes": ["error", "double",],
-    "@stylistic/semi": ["error", "always",],
-    "@stylistic/comma-dangle": ["error", "always",],
-    "@stylistic/no-multiple-empty-lines": ["error", { max: 1, },],
-    "@stylistic/eol-last": ["error", "always",],
+    "@stylistic/indent": ["error", 2],
+    "@stylistic/quotes": ["error", "double"],
+    "@stylistic/semi": ["error", "always"],
+    "@stylistic/no-multiple-empty-lines": ["error", { max: 1 }],
+    "@stylistic/eol-last": ["error", "always"],
     "@stylistic/space-before-function-paren": [
       "error",
       {
@@ -21,13 +20,14 @@ export default withNuxt({
       },
     ],
     "@stylistic/space-infix-ops": "error",
-    "@stylistic/key-spacing": ["error", { beforeColon: false, afterColon: true, },],
-    "@stylistic/object-curly-spacing": ["error", "always",],
-    "@stylistic/array-bracket-spacing": ["error", "never",],
-    "@stylistic/computed-property-spacing": ["error", "never",],
+    "@stylistic/key-spacing": ["error", { beforeColon: false, afterColon: true }],
+    "@stylistic/object-curly-spacing": ["error", "always"],
+    "@stylistic/array-bracket-spacing": ["error", "never"],
+    "@stylistic/computed-property-spacing": ["error", "never"],
     "@stylistic/space-before-blocks": "error",
     "@stylistic/keyword-spacing": "error",
     "@stylistic/no-trailing-spaces": "error",
-    "@stylistic/spaced-comment": ["error", "always",],
+    "@stylistic/spaced-comment": ["error", "always"],
   },
-},);
+});
+

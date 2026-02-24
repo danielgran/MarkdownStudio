@@ -1,17 +1,17 @@
-import type { PhrasingContent, } from "mdast";
+import type { PhrasingContent } from "mdast";
 import remarkParse from "remark-parse";
-import { unified, } from "unified";
-import { type ModelRef, nextTick, ref, watch, } from "vue";
+import { unified } from "unified";
+import { type ModelRef, nextTick, ref, watch } from "vue";
 import MarkdownNodeFactory from "../Factory/MarkdownNodeFactory";
-import { isTextNodeState, } from "../MarkdownComponentRegistry";
-import type { MarkdownAstNode, } from "../Types/MarkdownAstNode";
-import MarkdownNodeType, { isTextNodeType, } from "../Types/MarkdownAstNodeType";
+import { isTextNodeState } from "../MarkdownComponentRegistry";
+import type { MarkdownAstNode } from "../Types/MarkdownAstNode";
+import MarkdownNodeType, { isTextNodeType } from "../Types/MarkdownAstNodeType";
 
-function useMarkdownProcessor(modelValue: ModelRef<string | undefined>,) {
-  const markdownNodes = ref<Array<MarkdownAstNode>>([],);
-  const isInternalUpdate = ref(false,);
+function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
+  const markdownNodes = ref<Array<MarkdownAstNode>>([]);
+  const isInternalUpdate = ref(false);
 
-  compileMarkdown(modelValue.value ?? "",);
+  compileMarkdown(modelValue.value ?? "");
 
   watch(
     markdownNodes,
@@ -20,22 +20,22 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>,) {
       modelValue.value = serializeMarkdown();
       nextTick(() => {
         isInternalUpdate.value = false;
-      },);
+      });
     },
-    { deep: true, },
+    { deep: true },
   );
 
-  watch(modelValue, (newValue,) => {
+  watch(modelValue, (newValue) => {
     if (isInternalUpdate.value) return;
     markdownNodes.value = [];
-    compileMarkdown(newValue ?? "",);
-  },);
+    compileMarkdown(newValue ?? "");
+  });
 
-  function compileMarkdown(markdown: string,) {
-    const processor = unified().use(remarkParse,);
-    const tree = processor.parse(markdown,);
+  function compileMarkdown(markdown: string) {
+    const processor = unified().use(remarkParse);
+    const tree = processor.parse(markdown);
 
-    console.log("Parsed markdown AST:", tree,);
+    console.log("Parsed markdown AST:", tree);
 
     for (const node of tree.children) {
       if (node.type === "paragraph" && node.children[0]?.type === "text") {
@@ -43,12 +43,12 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>,) {
 
         // Custom Component Syntax here
         // eslint-disable-next-line @stylistic/quotes
-        if (text.startsWith('"""',) && text.endsWith('"""',)) {
-          const moduleName = (text.split("\n",)[0] ?? "").slice(3,).trim();
+        if (text.startsWith('"""') && text.endsWith('"""')) {
+          const moduleName = (text.split("\n")[0] ?? "").slice(3).trim();
           if (moduleName === "MarkdownModuleImage") {
-            const srcMatch = text.match(/src:\s*(\S+)/,);
-            const altMatch = text.match(/alt:\s*(.+)/,);
-            const captionMatch = text.match(/caption:\s*(.+)/,);
+            const srcMatch = text.match(/src:\s*(\S+)/);
+            const altMatch = text.match(/alt:\s*(.+)/);
+            const captionMatch = text.match(/caption:\s*(.+)/);
 
             markdownNodes.value.push(
               MarkdownNodeFactory.createImageNode(
@@ -63,22 +63,22 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>,) {
 
         // Regular text node
 
-        const phrasingContent = phrasingContentToText(node.children,);
+        const phrasingContent = phrasingContentToText(node.children);
 
-        console.log("Phrasing content text:", phrasingContent,);
+        console.log("Phrasing content text:", phrasingContent);
 
-        markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.PARAGRAPH, phrasingContent,),);
+        markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.PARAGRAPH, phrasingContent));
       } else if (node.type === "heading" && node.depth === 1) {
-        const phrasingContent = phrasingContentToText(node.children,);
+        const phrasingContent = phrasingContentToText(node.children);
 
-        markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE1, phrasingContent,),);
+        markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE1, phrasingContent));
       } else if (node.type === "heading" && node.depth === 2) {
         markdownNodes.value.push(
-          MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE2, phrasingContentToText(node.children,),),
+          MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE2, phrasingContentToText(node.children)),
         );
       } else if (node.type === "heading" && node.depth === 3) {
         markdownNodes.value.push(
-          MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE3, phrasingContentToText(node.children,),),
+          MarkdownNodeFactory.createTextNode(MarkdownNodeType.HEADLINE3, phrasingContentToText(node.children)),
         );
       }
     }
@@ -86,8 +86,8 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>,) {
 
   function serializeMarkdown(): string {
     return markdownNodes.value
-      .map((node,) => {
-        if (isTextNodeType(node.type,)) {
+      .map((node) => {
+        if (isTextNodeType(node.type)) {
           const prefix = {
             [MarkdownNodeType.PARAGRAPH]: "",
             [MarkdownNodeType.LIST]: "",
@@ -105,33 +105,33 @@ caption: ${node.componentState.caption}
 """`;
         }
         return "";
-      },)
-      .join("\n\n",);
+      })
+      .join("\n\n");
   }
 
-  function deleteNode(nodeIndex: number,) {
-    markdownNodes.value.splice(nodeIndex, 1,);
+  function deleteNode(nodeIndex: number) {
+    markdownNodes.value.splice(nodeIndex, 1);
   }
 
-  function addBlankNode(nodeIndex: number,) {
+  function addBlankNode(nodeIndex: number) {
     const newNode = MarkdownNodeFactory.createBlankParagraph();
 
     if (nodeIndex !== undefined) {
-      markdownNodes.value.splice(nodeIndex + 1, 0, newNode,);
+      markdownNodes.value.splice(nodeIndex + 1, 0, newNode);
     } else {
-      markdownNodes.value.push(newNode,);
+      markdownNodes.value.push(newNode);
     }
 
     return nodeIndex + 1;
   }
 
-  function createNodeWithType(text: string, newType: MarkdownNodeType,): MarkdownAstNode {
-    if (isTextNodeType(newType,)) {
-      return MarkdownNodeFactory.createTextNode(newType, text,);
+  function createNodeWithType(text: string, newType: MarkdownNodeType): MarkdownAstNode {
+    if (isTextNodeType(newType)) {
+      return MarkdownNodeFactory.createTextNode(newType, text);
     } else if (newType === MarkdownNodeType.IMAGE) {
-      return MarkdownNodeFactory.createImageNode("", "", "",);
+      return MarkdownNodeFactory.createImageNode("", "", "");
     } else {
-      throw new Error(`Unsupported node type: ${newType}`,);
+      throw new Error(`Unsupported node type: ${newType}`);
     }
   }
 
@@ -139,20 +139,20 @@ caption: ${node.componentState.caption}
     node: MarkdownAstNode,
     newType: MarkdownNodeType,
   ): { newNode: MarkdownAstNode; index: number } | null {
-    const nodeIndex = markdownNodes.value.indexOf(node,);
+    const nodeIndex = markdownNodes.value.indexOf(node);
     if (nodeIndex === -1) return null;
 
-    const currentText = isTextNodeState(node,) ? node.componentState.text : "";
-    const newNode = createNodeWithType(currentText, newType,);
+    const currentText = isTextNodeState(node) ? node.componentState.text : "";
+    const newNode = createNodeWithType(currentText, newType);
 
-    markdownNodes.value.splice(nodeIndex, 1, newNode,);
+    markdownNodes.value.splice(nodeIndex, 1, newNode);
 
-    return { newNode, index: nodeIndex, };
+    return { newNode, index: nodeIndex };
   }
 
-  function moveNode(fromIndex: number, toIndex: number,) {
-    const [node,] = markdownNodes.value.splice(fromIndex, 1,);
-    if (node) markdownNodes.value.splice(toIndex, 0, node,);
+  function moveNode(fromIndex: number, toIndex: number) {
+    const [node] = markdownNodes.value.splice(fromIndex, 1);
+    if (node) markdownNodes.value.splice(toIndex, 0, node);
   }
 
   return {
@@ -166,7 +166,7 @@ caption: ${node.componentState.caption}
 
 export default useMarkdownProcessor;
 
-function phrasingContentToText(phrasingContent: PhrasingContent[],): string {
+function phrasingContentToText(phrasingContent: PhrasingContent[]): string {
   let result = "";
 
   for (const content of phrasingContent) {
@@ -174,10 +174,10 @@ function phrasingContentToText(phrasingContent: PhrasingContent[],): string {
       result += content.value;
     }
     if (content.type === "strong") {
-      result += `**${phrasingContentToText(content.children,)}**`;
+      result += `**${phrasingContentToText(content.children)}**`;
     }
     if (content.type === "emphasis") {
-      result += `*${phrasingContentToText(content.children,)}*`;
+      result += `*${phrasingContentToText(content.children)}*`;
     }
   }
 

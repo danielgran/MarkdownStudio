@@ -8,29 +8,29 @@ export interface HeadlineTypeEntry {
 
 export const HEADLINE_TYPE_MAP: HeadlineTypeEntry[] = [
   {
-    prefix: "### ",
+    prefix: "###",
     type: MarkdownNodeType.HEADLINE3,
     depth: 3,
   },
   {
-    prefix: "## ",
+    prefix: "##",
     type: MarkdownNodeType.HEADLINE2,
     depth: 2,
   },
   {
-    prefix: "# ",
+    prefix: "#",
     type: MarkdownNodeType.HEADLINE1,
     depth: 1,
   },
 ];
 
-export function detectHeadlineTypeFromContent(content: string,): MarkdownNodeType | null {
-  for (const entry of HEADLINE_TYPE_MAP) {
-    if (content.startsWith(entry.prefix,)) {
-      return entry.type;
-    }
+export function detectHeadlineTypeFromContent(content: string, cursorPosition: number): MarkdownNodeType | null {
+  const matchedEntry = HEADLINE_TYPE_MAP.find(entry => content.startsWith(entry.prefix));
+  if (!matchedEntry) return null;
+
+  if (matchedEntry.prefix.length + 2 === cursorPosition) {
+    return matchedEntry.type;
   }
+
   return null;
 }
-
-export default HEADLINE_TYPE_MAP;

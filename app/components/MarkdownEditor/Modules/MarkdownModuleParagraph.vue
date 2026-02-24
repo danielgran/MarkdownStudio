@@ -6,18 +6,18 @@
 </template>
 
 <script lang="ts" setup>
-import { Placeholder, } from "@tiptap/extensions";
+import { Placeholder } from "@tiptap/extensions";
 import StarterKit from "@tiptap/starter-kit";
-import { EditorContent, useEditor, } from "@tiptap/vue-3";
-import { ref, } from "vue";
+import { EditorContent, useEditor } from "@tiptap/vue-3";
+import { ref } from "vue";
 import useReflectiveState from "../Composable/useReflectiveState";
-import { InlineCodeShortcut, PreventNewline, } from "../TipTap/SingleLineExtension";
-import type { TextishEmits, } from "../Types/TextishEmits";
+import { PreventNewline } from "../TipTap/SingleLineExtension";
+import type { TextishEmits } from "../Types/TextishEmits";
 import type MarkdownModuleTextState from "./MarkdownModuleTextState";
 
 const modelValue = defineModel<MarkdownModuleTextState>({
   required: true,
-},);
+});
 
 const editorRef = ref<InstanceType<typeof EditorContent>>();
 
@@ -27,33 +27,28 @@ const state = useReflectiveState({
   modelRef: modelValue,
   emit,
   editorRef,
-},);
+});
 
 const editor = useEditor({
   extensions: [
     Placeholder.configure({
       placeholder: "Type something...",
-    },),
+    }),
     StarterKit.configure({
       heading: false,
       codeBlock: false,
       blockquote: false,
       horizontalRule: false,
       hardBreak: false,
-    },),
+    }),
     PreventNewline,
-    InlineCodeShortcut,
   ],
   content: state.editorContent.value,
-  onUpdate: ({ editor, },) => {
-    state.handleInput(editor.getHTML(),);
-  },
-},);
+  onUpdate: (event) => state.handleTipTapUpdateEvent(event),
+});
 
-defineExpose(state.expose,);
+defineExpose(state.expose);
 </script>
 
 <style lang="scss" scoped>
-@use "../Styles/Mixins.scss" as *;
-@include reset-contenteditable;
 </style>
