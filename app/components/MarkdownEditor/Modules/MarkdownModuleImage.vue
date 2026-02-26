@@ -37,6 +37,7 @@
         <div class="markdown-module-image-form-field">
           <label for="image-alt">Alt Text</label>
           <input
+
             id="image-alt"
             v-model="editForm.alt"
             type="text"
@@ -59,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, } from "vue";
+import { ref } from "vue";
 import MarkdownEditorModal from "../MarkdownEditorModal.vue";
 import type MarkdownModuleImageState from "./MarkdownModuleImageState";
 
@@ -67,21 +68,21 @@ const divRef = ref<HTMLDivElement>();
 
 const modelValue = defineModel<MarkdownModuleImageState>({
   required: true,
-},);
+});
 
 // Context menu state
-const showContextMenu = ref(false,);
-const contextMenuPosition = ref({ x: 0, y: 0, },);
+const showContextMenu = ref(false);
+const contextMenuPosition = ref({ x: 0, y: 0 });
 
 // Modal state
-const showModal = ref(false,);
+const showModal = ref(false);
 const editForm = ref({
   src: "",
   alt: "",
   caption: "",
-},);
+});
 
-function handleClick(event: MouseEvent,) {
+function handleClick(event: MouseEvent) {
   const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
   contextMenuPosition.value = {
     x: event.clientX,
@@ -117,7 +118,7 @@ function focus() {
   }
 }
 
-defineExpose({ focus, },);
+defineExpose({ focus });
 </script>
 
 <style lang="scss" scoped>

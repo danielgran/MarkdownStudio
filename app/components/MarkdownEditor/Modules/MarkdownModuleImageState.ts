@@ -3,7 +3,8 @@ export default class MarkdownModuleImageState {
   alt: string;
   caption: string;
 
-  constructor(object: MarkdownModuleImageState,) {
-    Object.assign(this, object,);
+  constructor(object: MarkdownModuleImageState) {
+    Object.assign(this, object);
   }
 }
+

@@ -6,21 +6,15 @@
         class="w-4 h-4 text-gray-400"
       />
       Stringency
+      <UIcon
+        v-if="isStringencyLoading"
+        name="i-lucide-loader"
+        class="w-3.5 h-3.5 text-gray-400 animate-spin ml-auto"
+      />
     </h2>
 
     <div
-      v-if="isStringencyLoading"
-      class="flex items-center gap-2 py-3"
-    >
-      <UIcon
-        name="i-lucide-loader"
-        class="w-4 h-4 text-gray-400 animate-spin"
-      />
-      <span class="text-sm text-gray-500 dark:text-gray-400">Analyzing stringency...</span>
-    </div>
-
-    <div
-      v-else-if="stringencyError"
+      v-if="stringencyError && !isStringencyLoading"
       class="rounded-lg bg-red-50 dark:bg-red-900/20 p-3"
     >
       <div class="flex items-start gap-2">
@@ -35,7 +29,7 @@
     </div>
 
     <p
-      v-else-if="!stringencyReport"
+      v-else-if="!stringencyReport && !isStringencyLoading"
       class="text-sm text-gray-400 dark:text-gray-500 py-2"
     >
       Click <strong class="text-gray-500 dark:text-gray-400">Analyze</strong> to evaluate overall stringency and core idea adherence.

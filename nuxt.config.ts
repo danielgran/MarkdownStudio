@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ["@nuxt/eslint", "@nuxt/ui", "@pinia/nuxt", "pinia-plugin-persistedstate/nuxt",],
+  modules: ["@nuxt/eslint", "@nuxt/ui", "@pinia/nuxt", "pinia-plugin-persistedstate/nuxt"],
 
   imports: {
     autoImport: false,
@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-  css: ["~/assets/css/main.css",],
+  css: ["~/assets/css/main.css"],
 
   runtimeConfig: {
     openaiApiKey: process.env.NUXT_OPENAI_API_KEY,
@@ -17,9 +17,9 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    "/": { prerender: true, },
-    "/imprint": { prerender: true, },
-    "/editor": { ssr: false, },
+    "/": { prerender: true },
+    "/imprint": { prerender: true },
+    "/editor": { ssr: false },
   },
 
   compatibilityDate: "2025-01-15",
@@ -55,4 +55,4 @@ export default defineNuxtConfig({
       },
     },
   },
-},);
+});

@@ -7,23 +7,16 @@
           class="w-4 h-4 text-gray-400"
         />
         Paragraph Analysis
-      </h2>
-
-      <!-- Loading state -->
-      <div
-        v-if="isLoading"
-        class="flex flex-col items-center justify-center py-8 gap-3"
-      >
         <UIcon
+          v-if="isLoading"
           name="i-lucide-loader"
-          class="w-6 h-6 text-blue-500 animate-spin"
+          class="w-3.5 h-3.5 text-blue-400 animate-spin ml-auto"
         />
-        <p class="text-sm text-gray-500 dark:text-gray-400">Analyzing paragraphs...</p>
-      </div>
+      </h2>
 
       <!-- Error state -->
       <div
-        v-else-if="error"
+        v-if="error"
         class="rounded-lg bg-red-50 dark:bg-red-900/20 p-3 mb-3"
       >
         <div class="flex items-start gap-2">
@@ -39,7 +32,7 @@
 
       <!-- Empty state -->
       <div
-        v-else-if="reports.length === 0"
+        v-else-if="!isLoading && reports.length === 0"
         class="flex flex-col items-center justify-center py-8 gap-2 text-center"
       >
         <UIcon

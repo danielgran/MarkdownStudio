@@ -3,7 +3,8 @@ export default class AnalysisRequest {
   coreIdea: string;
   paragraph: string;
 
-  constructor(value: AnalysisRequest,) {
-    Object.assign(this, value,);
+  constructor(value: AnalysisRequest) {
+    Object.assign(this, value);
   }
 }
+

@@ -1,5 +1,7 @@
 <template>
   <div class="grid grid-cols-12 gap-6 mx-auto max-w-7xl px-6 py-8">
+    <MarkdownStudioToolbar class="col-span-full" />
+
     <MarkdownStudioBriefing
       class="col-span-full"
       :target-audience="targetAudience"
@@ -15,8 +17,6 @@
       :stringency-error="stringencyError"
       class="col-span-full"
     />
-
-    <MarkdownStudioToolbar class="col-span-full" />
 
     <MarkdownEditor
       v-model:focused-node="focusedNode"

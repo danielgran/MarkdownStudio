@@ -1,4 +1,4 @@
-import type { Component, } from "vue";
+import type { Component } from "vue";
 import MarkdownModuleHeadline1 from "./Modules/MarkdownModuleHeadline1.vue";
 import MarkdownModuleHeadline2 from "./Modules/MarkdownModuleHeadline2.vue";
 import MarkdownModuleHeadline3 from "./Modules/MarkdownModuleHeadline3.vue";
@@ -6,7 +6,7 @@ import MarkdownModuleImage from "./Modules/MarkdownModuleImage.vue";
 import MarkdownModuleImageState from "./Modules/MarkdownModuleImageState";
 import MarkdownModuleParagraph from "./Modules/MarkdownModuleParagraph.vue";
 import MarkdownModuleTextState from "./Modules/MarkdownModuleTextState";
-import type { MarkdownAstNode, } from "./Types/MarkdownAstNode";
+import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 import MarkdownNodeType from "./Types/MarkdownAstNodeType";
 
 type MarkdownComponentRegistryEntry = {
