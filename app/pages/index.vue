@@ -1,3 +1,32 @@
+
+<template>
+  <div>
+    <UPageHero
+      headline="Quality by Design"
+      title="Writing great articles should be effortless"
+      description="MarkdownStudio removes the friction between your ideas and the page. A distraction-free Markdown editor built for writers who care about craft."
+      orientation="vertical"
+      :links="heroLinks"
+    />
+
+    <UPageSection
+      id="features"
+      title="Built for writers, not for tools"
+      description="Every detail is designed to keep you focused on what matters — your words."
+      :features="features"
+    />
+
+    <UPageSection>
+      <UPageCTA
+        title="Ready to write something great?"
+        description="Open the editor and start crafting your next article — no setup, no sign-up."
+        variant="subtle"
+        :links="ctaLinks"
+      />
+    </UPageSection>
+  </div>
+</template>
+
 <script setup lang="ts">
 const heroLinks = [
   {
@@ -45,31 +74,3 @@ const ctaLinks = [
   },
 ];
 </script>
-
-<template>
-  <div>
-    <UPageHero
-      headline="Quality by Design"
-      title="Writing great articles should be effortless"
-      description="MarkdownStudio removes the friction between your ideas and the page. A distraction-free Markdown editor built for writers who care about craft."
-      orientation="vertical"
-      :links="heroLinks"
-    />
-
-    <UPageSection
-      id="features"
-      title="Built for writers, not for tools"
-      description="Every detail is designed to keep you focused on what matters — your words."
-      :features="features"
-    />
-
-    <UPageSection>
-      <UPageCTA
-        title="Ready to write something great?"
-        description="Open the editor and start crafting your next article — no setup, no sign-up."
-        variant="subtle"
-        :links="ctaLinks"
-      />
-    </UPageSection>
-  </div>
-</template>

@@ -1,4 +1,4 @@
-import type { AnalyzeResponse, } from "../../server/api/Types/AnalyzeResponse";
+import TextishParagraphReport from "../components/MarkdownStudio/Types/TextishParagraphReport";
 
 class MarkdownStudioService {
   async analyze(request: {
@@ -6,24 +6,26 @@ class MarkdownStudioService {
     coreIdea: string;
     paragraph: string;
     moduleType: string;
-  },): Promise<AnalyzeResponse> {
-    return await $fetch<AnalyzeResponse>("/api/analyze", {
+  }): Promise<TextishParagraphReport> {
+    const result = await $fetch<{ score: number; recommendation: string; suggestion: string }>("/api/analyze", {
       method: "POST",
-      headers: { "Content-Type": "application/json", },
-      body: JSON.stringify(request,),
-    },);
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+    return new TextishParagraphReport(result);
   }
 
   async analyzeStringency(request: {
     targetAudience: string;
     coreIdea: string;
     fullText: string;
-  },): Promise<AnalyzeResponse> {
-    return await $fetch<AnalyzeResponse>("/api/analyze-stringency", {
+  }): Promise<TextishParagraphReport> {
+    const result = await $fetch<{ score: number; recommendation: string; suggestion: string }>("/api/stringency", {
       method: "POST",
-      headers: { "Content-Type": "application/json", },
-      body: JSON.stringify(request,),
-    },);
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+    return new TextishParagraphReport(result);
   }
 }
 

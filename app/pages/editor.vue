@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col min-h-screen">
+  <main class="flex flex-col min-h-screen">
     <MarkdownStudio />
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, } from "#imports";
+import { definePageMeta } from "#imports";
 
 definePageMeta({
   layout: "editor",
-},);
+});
 </script>

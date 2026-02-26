@@ -11,13 +11,37 @@
       :node="node"
       :focused="focusedNode === node"
       @click.stop
-      @delete="deleteNode(index)"
-      @add="addBlankNode(index)"
       @keydown="handleKeyDownOnNode(node, $event)"
-      @focus="focusedNode = node"
+      @focus="handleFocusOnNode(node)"
       @update:cursor-position="(pos) => handleUpdateCursorPosition(node, pos)"
       @change-type="handleChangeType"
-    />
+    >
+      <template #focus-controls>
+        <span
+          class="drag-handle"
+          title="Drag to reorder"
+        >
+          ⠿
+        </span>
+        <button
+          type="button"
+          tabindex="-1"
+          @click="deleteNode(index)"
+        >
+          🗑️
+        </button>
+        <button
+          type="button"
+          tabindex="-1"
+          @click="addBlankNode(index)"
+        >
+          +
+        </button>
+      </template>
+      <template #after-controls>
+        <slot name="after-controls" />
+      </template>
+    </MarkdownEditorModule>
 
     <MarkdownEditorTextSelectionContextMenu
       v-if="showContextMenu"
@@ -33,7 +57,7 @@
 
 <script lang="ts" setup>
 import { useSortable } from "@vueuse/integrations/useSortable";
-import { nextTick, ref, useTemplateRef } from "vue";
+import { nextTick, ref, useTemplateRef, type PropType } from "vue";
 import type { MarkdownEditorInstance } from "./Composable/useMarkdownEditor";
 import MarkdownEditorTextSelectionContextMenu from "./ContextMenu/MarkdownEditorTextSelectionContextMenu.vue";
 import { isTextNodeState as isTextishNode } from "./MarkdownComponentRegistry";
@@ -41,7 +65,22 @@ import MarkdownEditorModule from "./MarkdownEditorModule.vue";
 import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 import type MarkdownNodeType from "./Types/MarkdownAstNodeType";
 
-const props = defineProps<{ editor: MarkdownEditorInstance }>();
+const props = defineProps({
+  editor: {
+    type: Object as PropType<MarkdownEditorInstance>,
+    required: true,
+  },
+  focusedNode: {
+    type: Object as PropType<MarkdownAstNode | null>,
+    required: false,
+    default: null,
+  },
+});
+
+const emit = defineEmits<{
+  (e: "update:focused-node", value: MarkdownAstNode | null): void;
+}>();
+
 const { markdownNodes, deleteNode, addBlankNode, replaceNodeType, moveNode } = props.editor;
 
 const editorContainerRef = useTemplateRef("editorContainerRef");
@@ -52,7 +91,7 @@ useSortable(editorContainerRef, markdownNodes, {
     moveNode(e.oldIndex!, e.newIndex!);
   },
 });
-const focusedNode = ref<MarkdownAstNode | null>(null);
+const focusedNode = ref<MarkdownAstNode | null>(props.focusedNode);
 
 // Context menu state
 const showContextMenu = ref(false);
@@ -73,7 +112,6 @@ function handleChangeType(node: MarkdownAstNode, newType: MarkdownNodeType) {
 
   if (result) {
     if (isTextishNode(result.newNode)) {
-      console.log("slicing at cursor position", node.editingState.cursorPosition);
       result.newNode.componentState.text = node.componentState.text.slice(node.editingState.cursorPosition);
     }
     focusNodeByIndex(result.index);
@@ -96,6 +134,11 @@ function handleKeyDownOnNode(node: MarkdownAstNode, event: KeyboardEvent) {
   } else if (event.key === "Delete") {
     handleDelete(nodeIndex);
   }
+}
+
+function handleFocusOnNode(node: MarkdownAstNode) {
+  focusedNode.value = node;
+  emit("update:focused-node", node);
 }
 
 function handleEnter(nodeIndex: number, event: KeyboardEvent) {
@@ -129,7 +172,6 @@ function handleDelete(index: number) {
 }
 
 function handleClickBlankArea() {
-  console.log("Clicked blank area");
   const lastNode = markdownNodes.value[markdownNodes.value.length - 1];
   if (lastNode && isTextishNode(lastNode) && lastNode.componentState.text === "") {
     focusedNode.value = lastNode;

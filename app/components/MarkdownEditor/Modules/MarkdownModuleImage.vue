@@ -1,7 +1,7 @@
 <template>
   <div
     ref="divRef"
-    class="markdown-module-image text-center"
+    class="markdown-module-image"
     @click="handleClick"
   >
     <img
@@ -124,6 +124,7 @@ defineExpose({ focus, },);
 .markdown-module-image {
   cursor: pointer;
   position: relative;
+  text-align: center;
 
   img {
     max-width: 100%;

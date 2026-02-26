@@ -1,6 +1,7 @@
 <template>
-  <div class="flex-1 flex flex-col">
+  <div class="grid grid-cols-12 gap-4 mx-auto max-w-7xl">
     <MarkdownStudioBriefing
+      class="col-span-full"
       :target-audience="targetAudience"
       :core-idea="coreIdea"
       :is-loading="isLoading"
@@ -8,33 +9,40 @@
       @update:core-idea="coreIdea = $event"
       @analyze="analyzeAllNodes"
     />
-    <MarkdownStudioToolbar />
-    <div class="flex-1 flex gap-4">
-      <div class="flex-1 flex justify-center py-12 px-4">
-        <MarkdownEditor
-          :editor="editor"
-          class="w-full max-w-3xl border border-default rounded-lg shadow-sm"
-        />
-      </div>
-      <div class="py-6 pr-6">
-        <MarkdownStudioSidebar
-          :reports="paragraphReports"
-          :is-loading="isLoading"
-          :error="errorMessage"
-          :stringency-report="stringencyReport"
-          :is-stringency-loading="isStringencyLoading"
-          :stringency-error="stringencyError"
-        />
-      </div>
+    <MarkdownStudioStringencyReport
+      v-model:stringency-report="stringencyReport"
+      :is-stringency-loading="isStringencyLoading"
+      :stringency-error="stringencyError"
+      class="col-span-full"
+    />
+
+    <MarkdownStudioToolbar class="col-span-full" />
+
+    <MarkdownEditor
+      v-model:focused-node="focusedNode"
+      :editor="editor"
+      class="col-span-8 min-w-2xl max-w-2xl mx-auto"
+    />
+
+    <MarkdownStudioSidebar class="col-span-4">
+      <MarkdownStudioParagraphReport
+        v-model="selectedReports"
+        :is-loading="isLoading"
+        :error="errorMessage"
+      />
+    </MarkdownStudioSidebar>
+  </div>
+
+  <div class="bg-olive-900 text-green-600 ">
+    <div>
+      Debug Information
     </div>
     <div>
-      <div>
-        Debug Information
-      </div>
-      <code>
-        {{ JSON.stringify(editor.markdownNodes.value, null, 2) }}
-      </code>
+      focusedNode: {{ focusedNode }}
     </div>
+    <code>
+      {{ JSON.stringify(editor.markdownNodes.value, null, 2) }}
+    </code>
   </div>
 </template>
 
@@ -51,7 +59,7 @@ import { MarkdownEditorAstNodeTypeMapping } from "./MarkdownEditorAstNodeTypeMap
 import MarkdownStudioBriefing from "./MarkdownStudioBriefing.vue";
 import MarkdownStudioSidebar from "./MarkdownStudioSidebar.vue";
 import MarkdownStudioToolbar from "./MarkdownStudioToolbar.vue";
-import TextishParagraphReport from "./Types/TextishParagraphReport";
+import type TextishParagraphReport from "./Types/TextishParagraphReport";
 
 const template = `
 ## Warum Serveranforderungen wichtig sind
@@ -137,19 +145,23 @@ const coreIdea = computed({
 const reportsMap = ref<Map<symbol, TextishParagraphReport>>(new Map());
 const pendingRequests = ref(0);
 const errorMessage = ref("");
-
 const stringencyReport = ref<TextishParagraphReport | null>(null);
 const isStringencyLoading = ref(false);
 const stringencyError = ref("");
-
+const focusedNode = ref<MarkdownAstNode | null>(null);
 const isLoading = computed(() => pendingRequests.value > 0);
 
 onBeforeMount(() => { });
 
-const paragraphReports = computed(() => {
-  return editor.markdownNodes.value
-    .map((node: MarkdownAstNode) => reportsMap.value.get(node.id))
-    .filter((r): r is TextishParagraphReport => r !== undefined);
+const selectedParagraphReport = computed(() => {
+  const selectedNode = focusedNode.value;
+  if (!selectedNode) return null;
+  return reportsMap.value.get(selectedNode.id) ?? null;
+});
+
+const selectedReports = computed(() => {
+  const report = selectedParagraphReport.value;
+  return report ? [report] : [];
 });
 
 // Snapshot for detecting which node text changed between debounce ticks
@@ -175,7 +187,7 @@ watchDebounced(
       nodeTextSnapshot.set(node.id, text);
     }
 
-    // Remove reports for deleted nodes
+    // Remove reports and snapshot entries for deleted nodes
     const currentIds = new Set(nodes.map((n: MarkdownAstNode) => n.id));
     for (const id of nodeTextSnapshot.keys()) {
       if (!currentIds.has(id)) {
@@ -185,6 +197,8 @@ watchDebounced(
         reportsMap.value = updated;
       }
     }
+
+    if (changedNodes) analyzeStringency();
 
     for (const node of changedNodes) {
       analyzeNode(node);
@@ -211,14 +225,7 @@ async function analyzeNode(node: MarkdownAstNode) {
       moduleType: MarkdownEditorAstNodeTypeMapping[node.type],
     });
 
-    reportsMap.value = new Map(reportsMap.value).set(
-      node.id,
-      new TextishParagraphReport({
-        score: result.score,
-        recommendation: result.recommendation,
-        suggestion: result.suggestion,
-      }),
-    );
+    reportsMap.value = new Map(reportsMap.value).set(node.id, result);
   } catch (error: unknown) {
     errorMessage.value = error instanceof Error ? error.message : "Analysis failed";
   } finally {
@@ -255,11 +262,7 @@ async function analyzeStringency() {
       fullText,
     });
 
-    stringencyReport.value = new TextishParagraphReport({
-      score: result.score,
-      recommendation: result.recommendation,
-      suggestion: result.suggestion,
-    });
+    stringencyReport.value = result;
   } catch (error: unknown) {
     stringencyError.value = error instanceof Error ? error.message : "Stringency analysis failed";
   } finally {

@@ -5,26 +5,7 @@
   >
     <div class="markdown-editor-module-controls">
       <template v-if="focused || mouseOver">
-        <span
-          class="drag-handle"
-          title="Drag to reorder"
-        >
-          ⠿
-        </span>
-        <button
-          type="button"
-          tabindex="-1"
-          @click="emit('delete')"
-        >
-          🗑️
-        </button>
-        <button
-          type="button"
-          tabindex="-1"
-          @click="emit('add')"
-        >
-          +
-        </button>
+        <slot name="focus-controls" />
       </template>
     </div>
     <div
@@ -45,13 +26,14 @@
         @click="emit('focus')"
       />
     </div>
+    <slot name="after-controls" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useFocusWithin, useMouseInElement, } from "@vueuse/core";
-import { computed, onMounted, ref, useTemplateRef, watch, type PropType, } from "vue";
-import type { MarkdownAstNode, } from "./Types/MarkdownAstNode";
+import { useFocusWithin, useMouseInElement } from "@vueuse/core";
+import { computed, onMounted, ref, useTemplateRef, watch, type PropType } from "vue";
+import type { MarkdownAstNode } from "./Types/MarkdownAstNode";
 
 import ComponentRegistry from "./MarkdownComponentRegistry";
 import type MarkdownAstNodeType from "./Types/MarkdownAstNodeType";
@@ -65,34 +47,32 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-},);
+});
 
 onMounted(() => {
   if (moduleComponentRef.value && props.focused) {
     moduleComponentRef.value.focus();
   }
-},);
+});
 
 const emit = defineEmits<{
-  "delete": [];
-  "add": [];
   "focus": [];
-  "update:cursor-position": [number,];
-  "update:node": [Record<string, unknown>,];
-  "change-type": [MarkdownAstNode, number,];
+  "update:cursor-position": [number];
+  "update:node": [Record<string, unknown>];
+  "change-type": [MarkdownAstNode, number];
 }>();
 
-const markdownEditorModuleRef = useTemplateRef("markdownEditorModuleRef",);
-const contentRef = useTemplateRef("contentRef",);
-const moduleComponentRef = ref<{ focus: () => void } | null>(null,);
-const innerElementFocus = useFocusWithin(contentRef,);
-const mouseInTarget = useMouseInElement(markdownEditorModuleRef,);
-const mouseOver = computed(() => !mouseInTarget.isOutside.value,);
+const markdownEditorModuleRef = useTemplateRef("markdownEditorModuleRef");
+const contentRef = useTemplateRef("contentRef");
+const moduleComponentRef = ref<{ focus: () => void } | null>(null);
+const innerElementFocus = useFocusWithin(contentRef);
+const mouseInTarget = useMouseInElement(markdownEditorModuleRef);
+const mouseOver = computed(() => !mouseInTarget.isOutside.value);
 
 // Handle external focus changes
 watch(
   () => props.focused,
-  (nowFocused,) => {
+  (nowFocused) => {
     if (nowFocused && moduleComponentRef.value) {
       moduleComponentRef.value.focus();
     }
@@ -100,11 +80,11 @@ watch(
 );
 
 // Focus detection root
-watch(innerElementFocus.focused, (isFocused,) => {
+watch(innerElementFocus.focused, (isFocused) => {
   if (isFocused) {
-    emit("focus",);
+    emit("focus");
   }
-},);
+});
 </script>
 
 <style lang="scss" scoped>

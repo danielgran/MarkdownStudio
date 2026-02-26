@@ -35,8 +35,6 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
     const processor = unified().use(remarkParse);
     const tree = processor.parse(markdown);
 
-    console.log("Parsed markdown AST:", tree);
-
     for (const node of tree.children) {
       if (node.type === "paragraph" && node.children[0]?.type === "text") {
         const text = node.children[0].value ?? "";
@@ -64,8 +62,6 @@ function useMarkdownProcessor(modelValue: ModelRef<string | undefined>) {
         // Regular text node
 
         const phrasingContent = phrasingContentToText(node.children);
-
-        console.log("Phrasing content text:", phrasingContent);
 
         markdownNodes.value.push(MarkdownNodeFactory.createTextNode(MarkdownNodeType.PARAGRAPH, phrasingContent));
       } else if (node.type === "heading" && node.depth === 1) {
@@ -139,6 +135,9 @@ caption: ${node.componentState.caption}
     node: MarkdownAstNode,
     newType: MarkdownNodeType,
   ): { newNode: MarkdownAstNode; index: number } | null {
+    // If the node is already of the desired type, do nothing
+    if (node.type === newType) return null;
+
     const nodeIndex = markdownNodes.value.indexOf(node);
     if (nodeIndex === -1) return null;
 

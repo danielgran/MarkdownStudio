@@ -48,9 +48,6 @@ const editor = useEditor({
     PreventNewline,
   ],
   content: `<h1>${state.editorContent.value}</h1>`,
-  onCreate: ({ editor }) => {
-    console.log("Editor created with content:", editor.getHTML());
-  },
   onUpdate: (event) => state.handleTipTapUpdateEvent(event),
 });
 
