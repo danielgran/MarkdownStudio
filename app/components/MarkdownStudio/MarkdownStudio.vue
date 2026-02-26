@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-12 gap-4 mx-auto max-w-7xl">
+  <div class="grid grid-cols-12 gap-6 mx-auto max-w-7xl px-6 py-8">
     <MarkdownStudioBriefing
       class="col-span-full"
       :target-audience="targetAudience"
@@ -33,17 +33,15 @@
     </MarkdownStudioSidebar>
   </div>
 
-  <div class="bg-olive-900 text-green-600 ">
-    <div>
+  <details class="mx-auto max-w-7xl px-6 pb-8">
+    <summary class="cursor-pointer text-xs font-medium text-gray-400 dark:text-gray-500 select-none hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
       Debug Information
+    </summary>
+    <div class="mt-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-4 text-xs font-mono text-gray-500 dark:text-gray-400 overflow-auto max-h-64">
+      <p class="mb-2"><span class="font-semibold">focusedNode:</span> {{ focusedNode }}</p>
+      <pre>{{ JSON.stringify(editor.markdownNodes.value, null, 2) }}</pre>
     </div>
-    <div>
-      focusedNode: {{ focusedNode }}
-    </div>
-    <code>
-      {{ JSON.stringify(editor.markdownNodes.value, null, 2) }}
-    </code>
-  </div>
+  </details>
 </template>
 
 <script setup lang="ts">

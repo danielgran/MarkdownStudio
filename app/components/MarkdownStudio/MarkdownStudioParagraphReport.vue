@@ -1,7 +1,11 @@
 <template>
   <div>
     <section>
-      <h2 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+      <h2 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+        <UIcon
+          name="i-lucide-file-text"
+          class="w-4 h-4 text-gray-400"
+        />
         Paragraph Analysis
       </h2>
 
