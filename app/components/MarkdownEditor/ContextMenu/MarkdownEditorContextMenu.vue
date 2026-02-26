@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="contextMenuRef"
     class="markdown-editor-context-menu"
     :style="positionStyle"
   >
@@ -9,19 +8,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
   x: number;
   y: number;
 }>();
 
-const contextMenuRef = ref<HTMLElement>();
-
 const positionStyle = computed(() => ({
   left: `${props.x}px`,
   top: `${props.y}px`,
-}),);
+}));
 </script>
 
 <style lang="scss" scoped>
