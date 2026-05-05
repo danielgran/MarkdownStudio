@@ -1,22 +1,18 @@
 # MarkdownStudio
 
-A distraction-free Markdown editor for writers who care about quality. Built with [Nuxt](https://nuxt.com) and [Nuxt UI](https://ui.nuxt.com).
+## Overview
 
-## Setup
+MarkdownStudio is an intelligent markdown editor designed for writers who prioritize quality and coherence. By analyzing your content against your target audience and core ideas, integrated AI features provide real-time feedback to help you write better markdown, faster.
 
-```bash
-pnpm install
-```
+**Built with**: [Nuxt](https://nuxt.com) and [Nuxt UI](https://ui.nuxt.com)
 
-## Development
+## About This Project
 
-```bash
-pnpm dev
-```
+MarkdownStudio is developed as part of a Master's degree program in Software Engineering. It serves both as an academic study project and a practical tool for real-world content creation, demonstrating advanced web application development practices and AI-assisted writing workflows.
 
-## Production
+### Key Features
 
-```bash
-pnpm build
-pnpm preview
-```
+- **AI-Powered Analysis**: Evaluate markdown content for coherence, clarity, and audience alignment
+- **Distraction-Free Interface**: Focus on writing with a clean, minimal UI
+- **Real-Time Feedback**: Get immediate suggestions for improving your markdown
+- **Stringency Reports**: Analyze content complexity and readability metrics

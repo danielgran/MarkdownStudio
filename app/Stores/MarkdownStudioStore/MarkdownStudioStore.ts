@@ -22,7 +22,7 @@ export default function useMarkdownStudioStore() {
       },
     },
     persist: {
-      storage: piniaPluginPersistedstate.cookies(),
+      storage: piniaPluginPersistedstate.localStorage(),
     },
   });
 }

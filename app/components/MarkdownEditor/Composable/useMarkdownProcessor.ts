@@ -106,7 +106,9 @@ caption: ${node.componentState.caption}
   }
 
   function deleteNode(nodeIndex: number) {
-    markdownNodes.value.splice(nodeIndex, 1);
+    nextTick(() => {
+      markdownNodes.value.splice(nodeIndex, 1);
+    });
   }
 
   function addBlankNode(nodeIndex: number) {
