@@ -45,14 +45,12 @@
 </template>
 
 <script setup lang="ts">
+import type { MarkdownAstNode } from "@grandaniel/vue-markdown-editor";
+import { MarkdownEditor, isTextNodeState, useMarkdownEditor } from "@grandaniel/vue-markdown-editor";
 import { watchDebounced } from "@vueuse/core";
 import { computed, ref } from "vue";
 import { useMarkdownStudioService } from "~/ApiServices/MarkdownStudioService";
 import useMarkdownStudioStore from "~/Stores/MarkdownStudioStore/MarkdownStudioStore";
-import { useMarkdownEditor } from "../MarkdownEditor/Composable/useMarkdownEditor";
-import { isTextNodeState } from "../MarkdownEditor/MarkdownComponentRegistry";
-import MarkdownEditor from "../MarkdownEditor/MarkdownEditor.vue";
-import type { MarkdownAstNode } from "../MarkdownEditor/Types/MarkdownAstNode";
 import { MarkdownEditorAstNodeTypeMapping } from "./MarkdownEditorAstNodeTypeMapping";
 import MarkdownStudioBriefing from "./MarkdownStudioBriefing.vue";
 import MarkdownStudioSidebar from "./MarkdownStudioSidebar.vue";

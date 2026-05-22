@@ -1,4 +1,4 @@
-import MarkdownAstNodeType from "../MarkdownEditor/Types/MarkdownAstNodeType";
+import { MarkdownAstNodeType } from "@grandaniel/vue-markdown-editor";
 
 export const MarkdownEditorAstNodeTypeMapping: Record<MarkdownAstNodeType, string> = {
   [MarkdownAstNodeType.PARAGRAPH]: "Paragraph",
