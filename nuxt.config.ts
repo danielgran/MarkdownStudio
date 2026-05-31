@@ -24,6 +24,12 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2025-01-15",
 
+  vite: {
+    optimizeDeps: {
+      exclude: ["@grandaniel/vue-markdown-editor"],
+    },
+  },
+
   nitro: {
     imports: {
       autoImport: true,
