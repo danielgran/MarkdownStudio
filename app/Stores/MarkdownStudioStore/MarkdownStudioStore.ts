@@ -11,6 +11,11 @@ export default function useMarkdownStudioStore() {
         targetAudience: "",
       }) satisfies MarkdownStudioStoreState,
     actions: {
+      initContent(template: string) {
+        if (!this.markdownContent) {
+          this.markdownContent = template;
+        }
+      },
       updateMarkdown(content: string) {
         this.markdownContent = content;
       },

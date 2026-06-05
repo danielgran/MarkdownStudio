@@ -13,7 +13,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@grandaniel/vue-markdown-editor": "file:../vue-markdown-editor",
+    "@grandaniel/vue-markdown-editor": "^1.1.3",
     "@iconify-json/lucide": "^1.2.90",
     "@nuxt/ui": "^4.4.0",
     "@pinia/nuxt": "^0.11.3",

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-  css: ["~/assets/css/main.css"],
+  css: ["~/assets/css/main.css", "@grandaniel/vue-markdown-editor/style.css"],
 
   runtimeConfig: {
     openaiApiKey: process.env.NUXT_OPENAI_API_KEY,
@@ -24,12 +24,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2025-01-15",
 
-  vite: {
-    optimizeDeps: {
-      exclude: ["@grandaniel/vue-markdown-editor"],
-    },
-  },
-
   nitro: {
     imports: {
       autoImport: true,
@@ -38,6 +32,12 @@ export default defineNuxtConfig({
       output: {
         hoistTransitiveImports: false,
       },
+    },
+  },
+
+  vite: {
+    optimizeDeps: {
+      exclude: ["@grandaniel/vue-markdown-editor"],
     },
   },
 

@@ -47,8 +47,9 @@
 <script setup lang="ts">
 import type { MarkdownAstNode } from "@grandaniel/vue-markdown-editor";
 import { MarkdownEditor, isTextNodeState, useMarkdownEditor } from "@grandaniel/vue-markdown-editor";
+import "@grandaniel/vue-markdown-editor/style.css";
 import { watchDebounced } from "@vueuse/core";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useMarkdownStudioService } from "~/ApiServices/MarkdownStudioService";
 import useMarkdownStudioStore from "~/Stores/MarkdownStudioStore/MarkdownStudioStore";
 import { MarkdownEditorAstNodeTypeMapping } from "./MarkdownEditorAstNodeTypeMapping";
@@ -58,11 +59,17 @@ import MarkdownStudioToolbar from "./MarkdownStudioToolbar.vue";
 import type TextishParagraphReport from "./Types/TextishParagraphReport";
 import templateContent from "./template.txt?raw";
 
-const template = templateContent;
-
 const studioStore = useMarkdownStudioStore()();
 const markdownStudioService = useMarkdownStudioService();
-const editor = useMarkdownEditor(template);
+
+// Load persisted content from localStorage, fall back to template
+studioStore.initContent(templateContent);
+const editor = useMarkdownEditor(studioStore.markdownContent);
+
+// Sync editor content back to store (auto-persists to localStorage)
+watch(editor.markdownContent, (content) => {
+  studioStore.updateMarkdown(content);
+});
 
 const targetAudience = computed({
   get: () => studioStore.targetAudience,
